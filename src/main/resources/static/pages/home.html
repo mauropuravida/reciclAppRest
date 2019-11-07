@@ -1,0 +1,104 @@
+<head>
+<link rel="stylesheet"  href="./pages/home.css">
+</head>
+<div data-ui-load="@lib/controllers/view_pager"
+      data-ui-options="options.viewPager"
+      class="feed-pager"
+     >
+    <!-- CARGAR -->
+    <section id="seccionCargar" class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars" >
+        <button class="buttonReciclable" onclick="window.location.href = './scan.html';">
+                <img class="imgReciclable" src="./images/barcode.png" alt="Barcode image">
+                <br>
+                Cargar reciclables
+                <br>
+                con la camara
+        </button>
+        <hr>
+        <p id="explicacion">Seleccionar la categoria de reciclable</p>
+        <!-- Se generan los botones a partir de los datos obtenidos del servidor -->
+        <script>
+        generarBotones();
+        </script>
+        <div id="formSubcategorias">
+            <p id="explicacionForm">Indique la cantidad a reciclar</p>
+            <br>
+            <p id="prodSeleccionado"></p>
+            <p id="volumen"></p>
+            <p class=p_inline>Cantidad: <input id="count" type="number" name="Cantidad" min="1" max="500" value="1"></p> 
+            <button class="botonModificable" onclick="decrementarInput('count',-1)">-</button>
+            <button class="botonModificable" onclick="incrementarInput('count',1)">+</button>
+            <div id="exampleModal" >
+                <button class="buttonCancel" onclick="salirForm()">Cancelar</button>
+                <button class="buttonConfirm" onclick="confirmarProducto()">Confirmar</button>
+            </div>
+        </div>
+    </section>
+     <!-- EN CASA -->
+    <section class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars">
+    <div>
+        <h4> Reciclables en mi hogar</h4>
+        <hr id="separadorEnCasa">
+        
+        <!--<p>Volumen estimado <span class="price" style="color:black"><b id="estimacionVolumen"></b></span></p> -->
+        <button class="botonModificable" onclick="linkBoton('headerDocumentar')" >Agregar un nuevo producto</button>
+    </div>
+    <script>
+        generarListado();
+    </script>
+
+    </section>
+    <!-- RECOLECCION -->
+    <section class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars">
+        
+    </select>
+        <div id="map_div" class="mapa"></div>
+        
+        <script type="text/javascript">
+        google.charts.load("current", {packages:["map"]});
+        google.charts.setOnLoadCallback(drawChart);
+        
+        //data is formatted for google map
+            jsonString=JSON.stringify(datosUser);// ESTE JSON LO OBTENGO DE UNA REQUEST AL SERVIDOR
+            const obj= JSON.parse(jsonString);
+            var origData = obj.Recoleccion.puntos;
+            function drawChart() {
+            //writes origData to html for initial view, line by line with breaks
+            // creates visualization using newData array
+            var options = {
+            mapType: 'normal',
+            showInfoWindow: true,
+            }
+            var data = google.visualization.arrayToDataTable(origData);
+            var map = new google.visualization.Map(document.getElementById('map_div'),{
+                zoom: 13,
+            });
+            map.draw(data, options);
+        }//end function
+        </script>
+    </section>
+    <!-- GRAFICOS -->
+    <section class="contentGraficos" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars">
+        <!-- Se genera la google chart con constantes -->
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+                jsonString=JSON.stringify(datosUser);
+                const obj= JSON.parse(jsonString);
+                var data = google.visualization.arrayToDataTable(obj.Graficos.graph);
+                var options = {
+                    //title: obj.Graficos.title,
+                    //width:'30px',
+                    //chartArea:{left:20,top:0,width:'40%',height:'70%'},
+                    legend:{position: 'bottom', textStyle: {color: 'blue',alignment:'center'}},
+                    backgroundColor:'#EAECEA'
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+                chart.draw(data, options);
+            }
+        </script>
+        <div class="chart" id="piechart"></div>
+    </section>
+    
+    </div> 

@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,22 +58,29 @@ public class WebController {
   
   List<AReciclar> recicladosPorConfirmar = new ArrayList<>(); 
   
-	@GetMapping("/")
+	/*@GetMapping("/")
 	public String home(Model model, HttpSession session) {
 		@SuppressWarnings("unchecked")
 		List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 		
-		long id = 1;
-		
+		String barcode="";
 		if (messages == null) {
 			messages = new ArrayList<>();
 		}
+		else
+			barcode= messages.get(0);
+		
 		model.addAttribute("sessionMessages", messages);
 		
-		model.addAttribute("sessionMessages",servicio.findById(id).toString());
+		model.addAttribute("sessionMessages",servicio.findByBarcode(barcode));
 
-		return "index";
-	}
+		return "access";
+	}*/
+  
+	  @RequestMapping(method = RequestMethod.GET, value = "/")
+	  public String index() {
+	      return "index";
+	  }
 
 	@PostMapping("/persistMessage")
 	public String persistMessage(@RequestParam("msg") String msg, HttpServletRequest request) {

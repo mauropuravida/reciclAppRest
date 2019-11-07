@@ -1,0 +1,64 @@
+.message {
+    color: rgb(0, 0, 0);
+    min-height: 100vh;
+    width: 100vw;
+    font-size: 100%;
+    display:block;
+    padding:60px;
+    text-align: center;
+    
+}
+.message i {
+    margin-left: 1px;
+    color: darkgrey;
+    font-size: 150%;
+}
+.notificacion{
+    position: relative;
+    width:100%;
+    height:30px;
+    display: block;
+    margin:1px;
+    border: 1px solid rgb(46, 46, 46);
+    border-radius: 25px;
+    padding:3px;
+    border: 1px solid rgb(8, 77, 161);
+}
+.notificacion .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+  
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  /* Tooltip arrow */
+  .notificacion .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .notificacion:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }

@@ -1,0 +1,181 @@
+{
+    "Otros":{
+        "src":"./images/otros.png",
+        "info":" INFORMACION sobre Electronica",
+        "barcodeLess":true,
+        "subCats":{
+            "Monitor":{
+                "src":"./images/subcategorias/monitor.jpeg",
+                "info":" INFORMACION Monitor",
+                "volumen":1000
+            },
+            "Teclado":{
+                "src":"./images/subcategorias/teclado.jpg",
+                "info":" INFORMACION teclado",
+                "volumen":500
+            },
+            "Mouse":{
+                "src":"./images/subcategorias/mouse.jpg",
+                "info":" INFORMACION mouse",
+                "volumen":250
+            }
+        },
+        "tipo":1
+    },
+    "Sachet":{
+        "src":"./images/sachet.jpg",
+        "info":"Esta categoria corresponde a todos los sachets de leche o yogur.",
+        "subCats":{
+            "Sachet":{
+                "src":"./images/sachet.jpg",
+                "info":" INFORMACION sachet (enunciar productos similares?)",
+                "volumen":100,
+                "id":"Sachet",
+                "representante":"Sachet de leche"
+            }
+        },
+        "tipo":1
+    },
+    "Vidrio":{
+        "src":"./images/glassbottle.png",
+        "info":" INFORMACION sobre todos los productos de vidrio que entrarian",
+        "subCats":{
+            "Vidrio grande":{
+                "src":"./images/subcategorias/vidrioGrande.jpg",
+                "info":" INFORMACION botella (enunciar productos similares?)",
+                "volumen":1000,
+                "id":"Vidrio grande",
+                "representante":"Cerveza Brahma 1L"
+            },
+            "Vidrio mediano":{
+                "src":"./images/subcategorias/vidrioMediano.jpg",
+                "info":" INFORMACION frasco",
+                "volumen":600,
+                "id":"Vidrio mediano",
+                "representante":"Frasco de mermelada"
+            },
+            "Vidrio chico":{
+                "src":"./images/subcategorias/vidrioChico.jpg",
+                "info":" INFORMACION gatorade",
+                "volumen":400,
+                "id":"Vidrio chico",
+                "representante":"Mermelada Carrefour"
+            }
+        },
+        "tipo":1
+    },
+    "Plastico":{
+        "src":"./images/plasticbottle.png",
+        "info":" INFORMACION sobre todos los productos de plastico que entrarian",
+        "subCats":{
+            "Plastico grande":{
+                "src":"./images/subcategorias/plasticoGrande.jpg",
+                "volumen":4000,
+                "id":"Plastico grande",
+                "representante":"Poett lavanda 4L"
+            },
+            "Plastico mediano":{
+                "src":"./images/subcategorias/plasticoMediano.jpg",
+                "volumen":2250,
+                "id":"Plastico mediano",
+                "representante":"Sprite 2,25L"
+            },
+            "Plastico chico":{
+                "src":"./images/subcategorias/plasticoChico.jpg",
+                "volumen":600,
+                "id":"Plastico chico",
+                "representante":"Coca cola 600mL"
+            }
+        },
+        "tipo":1
+    },
+    "Doypack":{
+        "src":"./images/subcategorias/doypackMediano.jpg",
+        "info":" INFORMACION ",
+        "subCats":{
+            "Doypack grande":{
+                "src":"./images/subcategorias/doypackGrande.jpg",
+                "volumen":210,
+                "id":"Doypack grande",
+                "representante":"Vivere 3L"
+            },
+            "Doypack mediano":{
+                "src":"./images/subcategorias/doypackMediano.jpg",
+                "volumen":190,
+                "id":"Doypack mediano",
+                "representante":"Vivere 810ml"
+            },
+            "Doypack chico":{
+                "src":"./images/subcategorias/doypackChico.jpg",
+                "volumen":160,
+                "id":"Doypack chico",
+                "representante":"Polycera rojo 400mL"
+            }
+        },
+        "tipo":1
+    },
+    "Tetrabrik":{
+        "src":"./images/subcategorias/tetraGrande.jpg",
+        "info":" INFORMACION ",
+        "subCats":{
+            "Tetrabrik grande":{
+                "src":"./images/subcategorias/tetraGrande.jpg",
+                "volumen":1000,
+                "id":"Tetrabrik grande",
+                "representante":"Vino toro tinto"
+            },
+            "Tetrabrik mediano":{
+                "src":"./images/subcategorias/tetraMediano.jpg",
+                "volumen":520,
+                "id":"Tetrabrik mediano",
+                "representante":"Pure de tomate Carrefour"
+            },
+            "Tetrabrik chico":{
+                "src":"./images/subcategorias/tetraChico.jpg",
+                "volumen":125,
+                "id":"Tetrabrik chico",
+                "representante":"Baggio junior"
+            }
+        },
+        "tipo":1
+    },
+    "Aluminio":{
+        "src":"./images/subcategorias/lataMediano.jpg",
+        "info":" INFORMACION ",
+        "subCats":{
+            "Lata grande":{
+                "src":"./images/subcategorias/lataGrande.jpg",
+                "volumen":1000,
+                "id":"Lata grande",
+                "representante":"Aceite natura 1000mL"
+            },
+            "Lata mediana":{
+                "src":"./images/subcategorias/lataMediano.jpg",
+                "volumen":350,
+                "id":"Lata mediana",
+                "representante":"Cerveza Miller "
+            },
+            "Lata chica":{
+                "src":"./images/subcategorias/lataChico.jpg",
+                "volumen":100,
+                "id":"Lata chica",
+                "representante":"Atún en Aceite Gomes da Costa"
+            }
+        },
+        "tipo":1
+    },
+    "Hojalata":{
+        "src":"./images/subcategorias/aerosol.jpeg",
+        "info":" INFORMACION ",
+        "subCats":{
+            "Aerosol":{
+                "src":"./images/subcategorias/aerosol.jpeg",
+                "volumen":1000,
+                "id":"Lata grande",
+                "representante":"WD40 200mL"
+            },
+        },
+        "tipo":1
+    }
+    
+}
