@@ -5,6 +5,3 @@ function Login(){
   window.location="../index.html";
 }
 
-function Back(){
-  window.location="../access.html";
-}
