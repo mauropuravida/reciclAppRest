@@ -25,4 +25,10 @@ public class AReciclarServicio implements AReciclarServicioInterface{
 		AReciclarRepo.deleteByIdUserAndIdProd(iduser,idprod);
 		
 	}
+	
+	@Override
+	public void confirmarReciclados(String user) {
+		AReciclarRepo.confirmarReciclados(user);
+		
+	}
 }
