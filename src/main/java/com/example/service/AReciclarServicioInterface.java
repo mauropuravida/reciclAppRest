@@ -7,7 +7,11 @@ public interface AReciclarServicioInterface {
 	public AReciclar save(AReciclar prod);
 
 	public void deleteByIdUserAndIdProd(long iduser, long idprod);
+
+	public void confirmar(AReciclar reciclable);
+
+	public AReciclar findByIdUserAndIdProd(long iduser, long idprod);
 	
-	void confirmarReciclados(String user);
+	//void confirmarReciclados(String user);
 
 }

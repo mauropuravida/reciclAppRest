@@ -27,12 +27,14 @@ public class AReciclar implements Serializable{
 	  @Column(name = "cantidad")
 	  private int cantidad;
 	  
-	 
+	  @Column(name = "confirmacion")
+	  private boolean confirmacion;
 
 	public AReciclar(long id_user, long id_prod, int cantidad) {
 		this.idUser = id_user;
 		this.idProd = id_prod;
 		this.cantidad = cantidad;
+		this.confirmacion = false;
 	}
 	
 	public AReciclar() {
@@ -61,6 +63,16 @@ public class AReciclar implements Serializable{
 	public void setCantidad(int cantidad) {
 		this.cantidad = cantidad;
 	}
+	
+	
+	public boolean getConfirmacion() {
+		return confirmacion;
+	}
+	
+	public void setConfirmacion(boolean confirmacion) {
+		this.confirmacion = confirmacion;
+	}
+	
 
 	@Override
 	public String toString() {
