@@ -16,9 +16,9 @@ public interface AReciclarRepository extends JpaRepository<AReciclar, Long>{
 
 	void deleteByIdUserAndIdProd(long iduser, long idprod);
 	
-	@Modifying
-    @Query("Update a_reciclar SET confirmacion=true WHERE id_user = :user and id_prod = :prod")
-	void confirmar(@Param("user")long user, @Param("prod")long prod);
+	//@Modifying
+    //@Query("Update a_reciclar SET confirmacion=true WHERE id_user = :user and id_prod = :prod")
+	//void confirmar(@Param("user")long user, @Param("prod")long prod);
 
 	AReciclar findByIdUserAndIdProd(long iduser, long idprod);
 	

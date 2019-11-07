@@ -29,7 +29,7 @@ public class AReciclarServicio implements AReciclarServicioInterface{
 	@Override
 	public void confirmar(AReciclar reciclable) {
 		
-		AReciclarRepo.confirmar(reciclable.getId_user(),reciclable.getId_prod());
+		//AReciclarRepo.confirmar(reciclable.getId_user(),reciclable.getId_prod());
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class AReciclarServicio implements AReciclarServicioInterface{
 	
 	/*@Override
 	public void confirmarReciclados(String user) {
-		AReciclarRepo.confirmarReciclados(user);
+		//AReciclarRepo.confirmarReciclados(user);
 		
 	}*/
 }

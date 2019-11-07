@@ -3,10 +3,14 @@ package com.example.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +34,10 @@ import com.example.service.ProductoDesconocidoServicioInterface;
 import com.example.service.ProductoServicioInterface;
 import com.example.service.UsuarioServicioInterface;
  
-@RestController
+//@RestController
+@Controller
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE})
-@RequestMapping (path ="/")
+//@RequestMapping (path ="/")
 public class WebController {
   
   @Autowired
@@ -50,12 +55,39 @@ public class WebController {
   @Autowired
   UsuarioServicioInterface servicioUsuario;
   
-  List<AReciclar> recicladosPorConfirmar = new ArrayList<>();
+  List<AReciclar> recicladosPorConfirmar = new ArrayList<>(); 
   
-  @GetMapping
-  public String check(){ //Mensaje que muestra al iniciar
-	  return "Funcionando...";
-  }
+	@GetMapping("/")
+	public String home(Model model, HttpSession session) {
+		@SuppressWarnings("unchecked")
+		List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
+
+		if (messages == null) {
+			messages = new ArrayList<>();
+		}
+		model.addAttribute("sessionMessages", messages);
+
+		return "index";
+	}
+
+	@PostMapping("/persistMessage")
+	public String persistMessage(@RequestParam("msg") String msg, HttpServletRequest request) {
+		@SuppressWarnings("unchecked")
+		List<String> msgs = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (msgs == null) {
+			msgs = new ArrayList<>();
+			request.getSession().setAttribute("MY_SESSION_MESSAGES", msgs);
+		}
+		msgs.add(msg);
+		request.getSession().setAttribute("MY_SESSION_MESSAGES", msgs);
+		return "redirect:/";
+	}
+
+	@PostMapping("/destroy")
+	public String destroySession(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return "redirect:/";
+	}
   
   @GetMapping(path = "/guardarConParam/{id_prod},{barcode},{descripcion},{categoria}") //Guardar un producto en Producto harcodeado
   public String unProducto(@PathVariable(value="id_prod") long id_prod,@PathVariable(value="barcode") String barcode,@PathVariable(value="descripcion") String desc,@PathVariable(value="categoria") String categ){
@@ -132,24 +164,21 @@ public class WebController {
 		return "Se guardaron los datos correctamente";
 	}*/
 	
-	@GetMapping(path = "actualizarReciclados/{iduser},{idprod}")
-	//@GetMapping(value = "/actualizarReciclados", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}) //Forma de hacerlo recibiendo un JSON 
-	//public String actualizarReciclados(@RequestBody AReciclar reciclable) {
-	public String actualizarReciclable(@PathVariable("iduser") long iduser, @PathVariable("idprod") long idprod) { //cuando se marca con tilde un producto que se esta por confirmar
-		AReciclar reciclable= servicioAReciclar.findByIdUserAndIdProd(iduser,idprod);
-		reciclable.setConfirmacion(true);
-		recicladosPorConfirmar.add(reciclable);
-		return "Se cambio la confirmacion";
-	}
-	
-	@PutMapping(path = "confirmarReciclados")
-	public String confirmarReciclados() {
-		for (AReciclar reciclable : recicladosPorConfirmar){
-			servicioAReciclar.confirmar(reciclable);
-		}
-		recicladosPorConfirmar.clear();
-		return "se confirmo";
-	}
-	
+	@GetMapping(path = "actualizarReciclados/{iduser},{idprod}") 
+	public String actualizarReciclable(@PathVariable("iduser") long iduser, @PathVariable("idprod") long idprod) { //cuando se marca con tilde un producto que se esta por confirmar 
+		AReciclar reciclable= servicioAReciclar.findByIdUserAndIdProd(iduser,idprod); 
+		reciclable.setConfirmacion(true); 
+		recicladosPorConfirmar.add(reciclable); 
+		return "Se cambio la confirmacion"; 
+	} 
+	 
+	/*@PutMapping(path = "confirmarReciclados") 
+	public String confirmarReciclados() { 
+		for (AReciclar reciclable : recicladosPorConfirmar){ 
+			servicioAReciclar.confirmar(reciclable); 
+		} 
+		recicladosPorConfirmar.clear(); 
+		return "se confirmo"; 
+	} */
 	
 }
