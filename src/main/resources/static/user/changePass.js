@@ -3,5 +3,5 @@ function Change(){
 }
 
 function Back(){
-  window.location="../login.html";
+  window.location="../access.html";
 }
