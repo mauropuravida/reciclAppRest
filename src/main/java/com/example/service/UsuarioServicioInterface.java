@@ -6,4 +6,6 @@ public interface UsuarioServicioInterface {
 	
 	public Usuario save(Usuario usu);
 
+	public Object findById(long id);
+
 }

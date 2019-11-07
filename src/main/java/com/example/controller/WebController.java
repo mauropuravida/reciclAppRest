@@ -61,11 +61,15 @@ public class WebController {
 	public String home(Model model, HttpSession session) {
 		@SuppressWarnings("unchecked")
 		List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
-
+		
+		long id = 1;
+		
 		if (messages == null) {
 			messages = new ArrayList<>();
 		}
 		model.addAttribute("sessionMessages", messages);
+		
+		model.addAttribute("sessionMessages",servicio.findById(id).toString());
 
 		return "index";
 	}
@@ -102,9 +106,13 @@ public class WebController {
 	}
 	
 
-	@GetMapping(path = "/findbyid") //Halla un producto de la tabla Productos por id
-	public String findById(@RequestParam("id") long id){
-	  return servicio.findById(id).toString();
+	@GetMapping(path = "/findbyid/{id}") //Halla un producto de la tabla Productos por id
+	public ResponseEntity<Usuario> findById(@PathVariable(value="id") long id){
+		Usuario user = (Usuario) servicioUsuario.findById(id);
+		if(user==null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok().body(user);
 	}
 	  
 

@@ -17,4 +17,9 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 	public Usuario save(Usuario usu) {
 		return usuarioRepo.save(usu);
 	}
+
+	@Override
+	public Object findById(long id) {
+		return usuarioRepo.findById(id);
+	}
 }
