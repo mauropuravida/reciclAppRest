@@ -169,11 +169,21 @@ public class WebController {
 		return servicioCategoria.findAll();
 	}
 	
-	@PostMapping(value = "/guardarUsuario", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}) //Guarda una usuario en la tabla Usuario de un json que viene 
+	/*@PostMapping(value = "/guardarUsuario", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}) //Guarda una usuario en la tabla Usuario de un json que viene 
 	public String guardarUsuario(@RequestBody Usuario usu) {
-	    servicioUsuario.save(usu);
-	    return "Se guardo un usuario en la tabla Usuario";
-	}
+		if(servicioUsuario.buscarPorUsername(usu.getUsername()) == false) {
+			servicioUsuario.save(usu);
+			return "Se guardo un usuario en la tabla Usuario";
+		}
+		else{ 
+			if(servicioUsuario.buscarPorMail(usu.getMail()) == false) {
+				servicioUsuario.save(usu);
+				return "Se guardo un usuario en la tabla Usuario";
+			}
+			else
+				return "No es posible guardar el usuario (mail existente o username existente)";
+		}
+	}*/
 	
 	/*@GetMapping(value = "/confirmarReciclados")
 	public String confirmarReciclados(String user){
@@ -231,6 +241,23 @@ public class WebController {
 					return servicioHistorico.recuperarDatosSoloFin(iduser,fin);
 				else
 					return servicioHistorico.recuperarDatosSoloInicio(iduser,inicio);
+	}
+	
+	//NO FUNCIONA: no se porque, no llegue
+	@GetMapping(value = "/guardar/{iduser},{username},{nombre},{apellido},{password},{address},{mail}") 
+	public String guardar(@PathVariable(value="iduser") long iduser,@PathVariable(value="username") String username,@PathVariable(value="nombre") String nombre,@PathVariable(value="apellido") String apellido,@PathVariable(value="password") String password,@PathVariable(value="address") String address,@PathVariable(value="mail") String mail) {
+		if(servicioUsuario.findByUsername(username) == null) {
+			servicioUsuario.save(new Usuario(iduser,username,nombre,apellido,password,address,mail));
+			return "Se guardo un usuario en la tabla Usuario";
+		}
+		else{ 
+			if(servicioUsuario.findByMail(mail) == null) {
+				servicioUsuario.save(new Usuario(iduser,username,nombre,apellido,password,address,mail));
+				return "Se guardo un usuario en la tabla Usuario";
+			}
+			else
+				return "No es posible guardar el usuario (mail existente o username existente)";
+		}
 	}
 	
 }

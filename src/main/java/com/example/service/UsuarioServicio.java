@@ -37,4 +37,15 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 	public Usuario findByUsernameAndPassword(String usename, String password) {
 		return usuarioRepo.findByUsernameAndPassword(usename, password);
 	}
+
+
+	@Override
+	public Usuario findByUsername(String username) {
+		return usuarioRepo.findByUsername(username);
+	}
+
+	@Override
+	public Usuario findByMail(String mail) {
+		return usuarioRepo.findByMail(mail);
+	}
 }

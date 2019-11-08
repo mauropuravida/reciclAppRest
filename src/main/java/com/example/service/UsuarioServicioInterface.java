@@ -15,4 +15,8 @@ public interface UsuarioServicioInterface {
 	
 	public Usuario findByUsernameAndPassword(String usename, String password);
 
+	public Usuario findByUsername(String username);
+
+	public Usuario findByMail(String mail);
+
 }
