@@ -32,4 +32,9 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 	public Usuario findByIdUserAndPassword(long idUser, String password) {
 		return usuarioRepo.findByIdUserAndPassword(idUser,password);
 	}
+
+	@Override
+	public Usuario findByUsernameAndPassword(String usename, String password) {
+		return usuarioRepo.findByUsernameAndPassword(usename, password);
+	}
 }

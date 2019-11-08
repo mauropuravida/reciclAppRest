@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="/user/login.css" >
-<script src="/user/login.js" defer></script>
+<link rel="stylesheet" href="../user/login.css" >
+<script src="../user/login.js" defer></script>
 <title>Login</title>
 </head>
 
@@ -17,21 +17,20 @@
               <tr class="centrar" > 
                 <th scope="row" class="row"><h2>Usuario</h2></th> 
                 <td><span class="cnt"> 
-                  <input name="usuario" type="text" class="Input" value="" size="20" /> 
+                  <input id="user" name="usuario" type="text" class="Input" value="" size="20" /> 
                 </span></td> 
               </tr> 
               <tr> 
                 <th height="33" scope="row" class="row"><h2>Clave</h2></th> 
                 <td><span class="cnt"> 
-                  <input name="password" type="password" class="Input" value="" size="20" /> 
+                  <input id="pass" name="password" type="password" class="Input" value="" size="20" /> 
                 </span></td> 
               </tr> 
               <tr height="60">
                 <th scope="row">
                 </th>
                 <th scope="row">
-                  <input value="Ingresar" target="_parent" onclick="Login()" type="button" class="boton"/>
-                  <input value="Volver" target="_parent" onclick="Back()" type="button" class="boton"/>
+                  <input href="#" value="Ingresar" target="_parent" onclick="Login()" id="logear" type="button" class="boton"/>
                 </th> 
               </tr> 
             </table> 

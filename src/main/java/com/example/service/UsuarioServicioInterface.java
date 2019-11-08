@@ -12,5 +12,7 @@ public interface UsuarioServicioInterface {
 	public List<Usuario> findAll();
 
 	public Usuario findByIdUserAndPassword(long idUser, String password);
+	
+	public Usuario findByUsernameAndPassword(String usename, String password);
 
 }

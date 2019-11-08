@@ -7,50 +7,78 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.model.UserRegister;
+import com.example.model.Usuario;
 import com.example.service.ProductoServicioInterface;
+import com.example.service.UsuarioServicioInterface;
 
 @Controller
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT})
+//@RequestMapping (path ="/login.html")
 public class HTMLController {
 	
 	@Autowired
 	ProductoServicioInterface servicio;
-	
-	/*@GetMapping(path = "/")
-	public String home(Model model, HttpSession session) {
-		@SuppressWarnings("unchecked")
-		List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
-		
-		long id = 1;
-		
-		if (messages == null) {
-			messages = new ArrayList<>();
-		}
-		model.addAttribute("sessionMessages", messages);
-		
-		model.addAttribute("sessionMessages",servicio.findById(id).toString());
 
+	@Autowired
+	UsuarioServicioInterface servicioUsuario;
+	
+	@GetMapping(path = "/")
+	public String empty(HttpServletRequest request) { 
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds == null) {
+			return "login"; 
+		}
 		return "index";
-	}*/
+	} 
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/index.html") 
-	public String index() { 
-		return "index"; 
+	public String index(HttpServletRequest request) { 
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds == null) {
+			return "login"; 
+		}
+		return "index";
 	} 
 	 
 	@RequestMapping(method = RequestMethod.GET, value = "/login.html") 
-	public String login() { 
-		return "login"; 
-	} 
+	public String login(HttpServletRequest request) { 
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds == null) {
+			return "login"; 
+		}
+		return "index";
+	}
+	
+	@PostMapping(path = "/validate.html", consumes = "application/json")
+	public ResponseEntity<?> persistMessage(@RequestBody UserRegister userRegister, HttpServletRequest request) {
+		@SuppressWarnings("unchecked")
+		Usuario user = servicioUsuario.findByUsernameAndPassword(userRegister.getUser(), userRegister.getPass());
+		if (user != null) {
+			List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+			if (creds == null) {
+				creds = new ArrayList<>();
+				request.getSession().setAttribute("MY_SESSION_MESSAGES", creds);
+			}
+			creds.add(userRegister.getUser());
+			creds.add(userRegister.getPass());
+			request.getSession().setAttribute("MY_SESSION_MESSAGES", creds);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);	
+	}
 	 
 	@RequestMapping(method = RequestMethod.GET, value = "/changePass.html") 
 	public String password() { 
@@ -62,28 +90,28 @@ public class HTMLController {
 		return "createAccount"; 
 	} 
 	 
-	@RequestMapping(method = RequestMethod.GET, value = "/main_menu.html") 
-	public String main_menu() { 
+	@RequestMapping(method = RequestMethod.GET, value = "/shared/main_menu.html") 
+	public String main_menu(HttpServletRequest request) { 
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds == null) {
+			return "login"; 
+		}
 		return "main_menu"; 
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/scan.html") 
+	public String scan(HttpServletRequest request) {
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds == null) {
+			return "login"; 
+		}
+		return "scan"; 
 	} 
 
-	@PostMapping("/persistMessage")
-	public String persistMessage(@RequestParam("msg") String msg, HttpServletRequest request) {
-		@SuppressWarnings("unchecked")
-		List<String> msgs = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
-		if (msgs == null) {
-			msgs = new ArrayList<>();
-			request.getSession().setAttribute("MY_SESSION_MESSAGES", msgs);
-		}
-		msgs.add(msg);
-		request.getSession().setAttribute("MY_SESSION_MESSAGES", msgs);
-		return "redirect:/";
-	}
-
-	@PostMapping("/destroy")
-	public String destroySession(HttpServletRequest request) {
+	@PostMapping("/logout")
+	public ResponseEntity<?> destroySession(HttpServletRequest request) {
 		request.getSession().invalidate();
-		return "redirect:/";
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 }

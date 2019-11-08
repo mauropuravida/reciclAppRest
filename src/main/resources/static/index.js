@@ -15,7 +15,7 @@ const servicio="https://f65b04bf.ngrok.io/";
 
 //zuix.using('script', './service-worker.js');
 zuix.using('style', '//zuixjs.github.io/zkit/css/flex-layout-attribute.min.css');
-zuix.using('style', './index.css');
+zuix.using('style', '../index.css');
 
 zuix.$.find('.profile').on('click', function() {
     if (drawerLayout) drawerLayout.open();

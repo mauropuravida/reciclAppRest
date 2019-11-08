@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.model.Historico;
 import com.example.repo.HistoricoRepository;
 
+@Service
 public class HistoricoServicio implements HistoricoServicioInterface{
 	
 	@Autowired

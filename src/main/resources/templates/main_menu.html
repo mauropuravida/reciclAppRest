@@ -10,7 +10,19 @@
     loadCuenta();
 
     function Back(){
-      window.location="../access.html";
+    	var http = new XMLHttpRequest();
+    	var url = "http://localhost:8080/logout";
+    	http.open("POST", url, true);
+    	http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    	
+    	http.onreadystatechange = function() {
+    	    if(http.readyState == 4 && http.status == 200) {
+    	    	window.location="../login.html";
+    	    }
+    	    else
+    	    	window.location="../index.html";
+    	}
+    	http.send(JSON.stringify({}));
     }
 </script>
 <hr>
