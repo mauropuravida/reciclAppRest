@@ -18,25 +18,25 @@ public class Usuario implements Serializable{
 	  @Column(name = "id_user")
 	  private long idUser;
 	  
-	  @Column(name = "id_prod")
-	  private long username;
+	  @Column(name = "username")
+	  private String username;
 	  
 	  @Column(name = "nombre")
-	  private int nombre;
+	  private String nombre;
 	  
 	  @Column(name = "apellido")
-	  private int apellido;
+	  private String apellido;
 	  
 	  @Column(name = "password")
-	  private int password;
+	  private String password;
 	  
 	  @Column(name = "address")
-	  private int address;
+	  private String address;
 	  
 	  @Column(name = "mail")
-	  private int mail;
+	  private String mail;
 
-	public Usuario(long idUser, long username, int nombre, int apellido, int password, int address, int mail) {
+	public Usuario(long idUser, String username, String nombre, String apellido, String password, String address, String mail) {
 		super();
 		this.idUser = idUser;
 		this.username = username;
@@ -59,51 +59,51 @@ public class Usuario implements Serializable{
 		this.idUser = idUser;
 	}
 
-	public long getUsername() {
+	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(long username) {
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
-	public int getNombre() {
+	public String getNombre() {
 		return nombre;
 	}
 
-	public void setNombre(int nombre) {
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 
-	public int getApellido() {
+	public String getApellido() {
 		return apellido;
 	}
 
-	public void setApellido(int apellido) {
+	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
 
-	public int getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(int password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public int getAddress() {
+	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(int address) {
+	public void setAddress(String address) {
 		this.address = address;
 	}
 
-	public int getMail() {
+	public String getMail() {
 		return mail;
 	}
 
-	public void setMail(int mail) {
+	public void setMail(String mail) {
 		this.mail = mail;
 	}
 

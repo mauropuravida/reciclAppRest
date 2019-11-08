@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import java.util.ArrayList;
-
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,18 +26,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.model.AReciclar;
 import com.example.model.Categoria;
+import com.example.model.Historico;
 import com.example.model.Producto;
 import com.example.model.Producto_Desconocido;
 import com.example.model.Usuario;
 import com.example.service.AReciclarServicioInterface;
 import com.example.service.CategoriaServicioInterface;
+import com.example.service.HistoricoServicioInterface;
 import com.example.service.ProductoDesconocidoServicioInterface;
 import com.example.service.ProductoServicioInterface;
 import com.example.service.UsuarioServicioInterface;
  
-//@RestController
-@Controller
-@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE})
+@RestController
+//@Controller
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT})
 //@RequestMapping (path ="/")
 public class WebController {
   
@@ -56,31 +58,27 @@ public class WebController {
   @Autowired
   UsuarioServicioInterface servicioUsuario;
   
+  @Autowired
+  HistoricoServicioInterface servicioHistorico;
+  
   List<AReciclar> recicladosPorConfirmar = new ArrayList<>(); 
   
-	/*@GetMapping("/")
+/*	@GetMapping(path = "/")
 	public String home(Model model, HttpSession session) {
 		@SuppressWarnings("unchecked")
 		List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
 		
-		String barcode="";
+		long id = 1;
+		
 		if (messages == null) {
 			messages = new ArrayList<>();
 		}
-		else
-			barcode= messages.get(0);
-		
 		model.addAttribute("sessionMessages", messages);
 		
-		model.addAttribute("sessionMessages",servicio.findByBarcode(barcode));
+		model.addAttribute("sessionMessages",servicio.findById(id).toString());
 
-		return "access";
-	}*/
-  
-	  @RequestMapping(method = RequestMethod.GET, value = "/")
-	  public String index() {
-	      return "index";
-	  }
+		return "index";
+	}
 
 	@PostMapping("/persistMessage")
 	public String persistMessage(@RequestParam("msg") String msg, HttpServletRequest request) {
@@ -99,7 +97,7 @@ public class WebController {
 	public String destroySession(HttpServletRequest request) {
 		request.getSession().invalidate();
 		return "redirect:/";
-	}
+	}*/
   
   @GetMapping(path = "/guardarConParam/{id_prod},{barcode},{descripcion},{categoria}") //Guardar un producto en Producto harcodeado
   public String unProducto(@PathVariable(value="id_prod") long id_prod,@PathVariable(value="barcode") String barcode,@PathVariable(value="descripcion") String desc,@PathVariable(value="categoria") String categ){
@@ -109,17 +107,20 @@ public class WebController {
 	  
 
 	@GetMapping(path = "/findall") //Halla todos los productos de la tabla Productos
-	public List<Producto> findAll(){
-	  return servicio.findAll();
+	public List<Usuario> findAll(){
+	  return servicioUsuario.findAll();
 	}
 	
 
-	@GetMapping(path = "/findbyid/{id}") //Halla un producto de la tabla Productos por id
+	@GetMapping(path = "/usuario/{id}") //Halla un usuario de la tabla Usuario por id
 	public ResponseEntity<Usuario> findById(@PathVariable(value="id") long id){
-		Usuario user = (Usuario) servicioUsuario.findById(id);
+		Usuario user = servicioUsuario.findByIdUser(id);
+		System.out.println("ayayay");
 		if(user==null) {
+			System.out.println("null");
 			return ResponseEntity.notFound().build();
 		}
+		System.out.println("no null");
 		return ResponseEntity.ok().body(user);
 	}
 	  
@@ -157,7 +158,7 @@ public class WebController {
 		return servicioCategoria.findByCategoria(categ).getId_prod();
 	}
 	
-	@DeleteMapping(path = "borrarProducto/{iduser},{idprod}") //borra una entrada en la tabla a_reciclar con un id_user y un id_prod como entrada
+	@DeleteMapping(path = "/borrarProducto/{iduser},{idprod}") //borra una entrada en la tabla a_reciclar con un id_user y un id_prod como entrada
 	public String clearUser(@PathVariable("iduser") long iduser, @PathVariable("idprod") long idprod){
 	    servicioAReciclar.deleteByIdUserAndIdProd(iduser, idprod);
 	    return "Se borro";
@@ -180,7 +181,7 @@ public class WebController {
 		return "Se guardaron los datos correctamente";
 	}*/
 	
-	@GetMapping(path = "actualizarReciclados/{iduser},{idprod}") 
+	@GetMapping(path = "/actualizarReciclados/{iduser},{idprod}") 
 	public String actualizarReciclable(@PathVariable("iduser") long iduser, @PathVariable("idprod") long idprod) { //cuando se marca con tilde un producto que se esta por confirmar 
 		AReciclar reciclable= servicioAReciclar.findByIdUserAndIdProd(iduser,idprod); 
 		reciclable.setConfirmacion(true); 
@@ -188,13 +189,48 @@ public class WebController {
 		return "Se cambio la confirmacion"; 
 	} 
 	 
-	/*@PutMapping(path = "confirmarReciclados") 
+	@PutMapping(path = "/confirmarReciclados") 
 	public String confirmarReciclados() { 
 		for (AReciclar reciclable : recicladosPorConfirmar){ 
 			servicioAReciclar.confirmar(reciclable); 
 		} 
 		recicladosPorConfirmar.clear(); 
 		return "se confirmo"; 
-	} */
+	} 
+	
+	@GetMapping(path = "/existeUsuario", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public String existeUsuario(@RequestBody Usuario usu) {
+	    Usuario u = servicioUsuario.findByIdUserAndPassword(usu.getIdUser(),usu.getPassword());
+		if(u==null) {
+			return "";
+		}
+		return "";
+	}
+	
+	
+	@GetMapping("/cargarProductosUsuario/{iduser}")
+	public List<Producto> cargarProductosUsuario(@PathVariable ("iduser") long iduser){
+		List<AReciclar> reciclables = servicioAReciclar.findByIdUser(iduser);
+		List<Producto> productos = new ArrayList<>();
+		for (AReciclar rec : reciclables){ 
+			Producto prod = servicio.findById(rec.getId_prod()); 
+			productos.add(prod);
+		} 
+		return productos;
+	}
+	
+	@GetMapping(path = "/recuperarDatos/{iduser},{inicio},{fin}") //Halla todos los productos de la tabla Productos
+	public List<Historico> recuperarDatos(@PathVariable ("iduser") long iduser,@PathVariable ("inicio") Date inicio, @PathVariable ("fin") Date fin){
+		if(inicio!=null && fin!=null)
+			return servicioHistorico.recuperarDatos(iduser,inicio,fin);
+		else
+			if(inicio==null && fin==null)
+				return servicioHistorico.findByIdUser(iduser);
+			else
+				if(inicio == null)
+					return servicioHistorico.recuperarDatosSoloFin(iduser,fin);
+				else
+					return servicioHistorico.recuperarDatosSoloInicio(iduser,inicio);
+	}
 	
 }
