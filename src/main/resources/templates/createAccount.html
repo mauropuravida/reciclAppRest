@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="../user/createAccount.css" >
 <script src="../user/createAccount.js" defer></script>
+<script src="../coneccion.js" defer></script>
 <title>Login</title>
 </head>
 
@@ -13,53 +14,57 @@
             Registro
           </h1>
         <form name="login">
-            <table > 
+            <table >
+				<tr> 
+				  <td scope="row" class="row"><h2></h2></td> 
+				  <td><span id="message" class="message"></span></td> 
+				</tr>
                 <tr class="centrar" > 
                     <th scope="row" class="row"><h2>Nombre</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="nombre" type="text" class="Input" value="" size="20" /> 
+                        <input name="nombre" id="nombre" type="text" class="Input" value="" size="20" /> 
                     </span></td> 
                 </tr> 
-                <tr class="centrar" > 
+                <tr> 
                     <th scope="row" class="row"><h2>Apellido</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="apellido" type="text" class="Input" value="" size="20" /> 
+                        <input name="apellido" id="apellido" type="text" class="Input" value="" size="20" /> 
                     </span></td> 
                 </tr>
-                <tr class="centrar" > 
+                <tr > 
                     <th scope="row" class="row"><h2>Dirección</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="direccion" type="text" class="Input" value="" size="20" /> 
+                        <input name="direccion" id="direccion" type="text" class="Input" value="" size="20" /> 
                     </span></td> 
                 </tr> 
-                <tr class="centrar" > 
+                <tr > 
                     <th scope="row" class="row"><h2>Email</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="apellido" type="text" class="Input" value="" size="20" /> 
+                        <input name="email" id="email" type="text" class="Input" onfocusOut="checkMe()" value="" size="20" /> 
                     </span></td> 
                 </tr>
-                <tr class="centrar" > 
-                        <th scope="row" class="row"><h2>Reescribir Email</h2></th> 
-                        <td><span class="cnt"> 
-                            <input name="apellido" type="text" class="Input" value="" size="20" /> 
-                        </span></td> 
-                    </tr>                
-                <tr class="centrar" > 
+            	<tr > 
+                    <th scope="row" class="row"><h2>Reescribir Email</h2></th> 
+                    <td><span class="cnt"> 
+                        <input name="checkMa" id="checkMa" type="text" class="Input" onfocusOut="checkM()" value="" size="20" /> 
+                    </span></td> 
+                </tr>                
+                <tr > 
                     <th scope="row" class="row"><h2>Usuario</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="usuario" type="text" class="Input" value="" size="20" /> 
+                        <input name="usuario" id="usuario" type="text" class="Input" onfocusout="checkUser()" value="" size="20" /> 
                     </span></td> 
                 </tr> 
                 <tr> 
                     <th height="33" scope="row" class="row"><h2>Clave</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="password" type="password" class="Input" value="" size="20" /> 
+                        <input name="password" id="pass" type="password" class="Input" value="" size="20" /> 
                     </span></td> 
                 </tr>
                 <tr> 
                     <th height="33" scope="row" class="row"><h2>Reescribir Clave</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="password" type="password" class="Input" value="" size="20" /> 
+                        <input name="password" id="passCh" type="password" class="Input" onfocusout="checkC()" value="" size="20" /> 
                     </span></td> 
                 </tr> 
                 <tr height="60">

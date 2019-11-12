@@ -30,11 +30,11 @@ public class AReciclar implements Serializable{
 	  @Column(name = "confirmacion")
 	  private boolean confirmacion;
 
-	public AReciclar(long id_user, long id_prod, int cantidad) {
+	public AReciclar(long id_user, long id_prod, int cantidad, boolean confirmacion) {
 		this.idUser = id_user;
 		this.idProd = id_prod;
 		this.cantidad = cantidad;
-		this.confirmacion = false;
+		this.confirmacion = confirmacion;
 	}
 	
 	public AReciclar() {

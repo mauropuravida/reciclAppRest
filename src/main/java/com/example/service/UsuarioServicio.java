@@ -38,7 +38,6 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 		return usuarioRepo.findByUsernameAndPassword(usename, password);
 	}
 
-
 	@Override
 	public Usuario findByUsername(String username) {
 		return usuarioRepo.findByUsername(username);
@@ -47,5 +46,11 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 	@Override
 	public Usuario findByMail(String mail) {
 		return usuarioRepo.findByMail(mail);
+	}
+	
+	@Override
+	public void setPass(String pass, long user) {
+		System.out.println(pass+" "+user+"\n");
+		usuarioRepo.setPass(user, pass);
 	}
 }

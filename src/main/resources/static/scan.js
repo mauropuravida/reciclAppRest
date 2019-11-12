@@ -1,6 +1,6 @@
 let json;
-//const servicio="http://192.168.2.51:8080/";// ESTA TIENE QUE SER LA IP y puerto DEL SERVICIO REST
-const servicio="https://f65b04bf.ngrok.io/"
+//const servicio="http://131.221.0.134/";// ESTA TIENE QUE SER LA IP y puerto DEL SERVICIO REST
+//const servicio="https://f65b04bf.ngrok.io/"
 function salirFormScan(){
     window.location.href='#';
 }
@@ -109,7 +109,7 @@ function restartQuagga(){//Inicializa Quagga de nuevo para otra lectura de codig
          console.log(err);
          return
      }
-     console.log("Initialization finished. Ready to start");
+     console.log("Initialization finished. Ready to start js");
      Quagga.start();
  });
 }

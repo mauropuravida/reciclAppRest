@@ -19,4 +19,7 @@ public interface UsuarioServicioInterface {
 
 	public Usuario findByMail(String mail);
 
+	public void setPass(String pass, long user);
+
+
 }

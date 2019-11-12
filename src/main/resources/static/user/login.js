@@ -3,7 +3,7 @@
 function Login(){
 
 	var http = new XMLHttpRequest();
-	var url = "http://localhost:8080/validate.html";
+	var url = servicio+"validate.html";
 	var user = document.getElementById("user").value;
 	var pass = document.getElementById("pass").value;
 	http.open("POST", url, true);
@@ -13,8 +13,11 @@ function Login(){
 	    if(http.readyState == 4 && http.status == 200) {
 	    	window.location="../index.html";
 	    }
-	    else
-	    	window.location="../login.html";
+	    else{
+	    	document.getElementById("message").style.visibility = "visible";
+	    	document.getElementById("message").innerHTML="El usuario y/o la contraseña son invalidos";
+	    	setTimeout(function(){document.getElementById("message").style.visibility = "hidden";}, 4*1000);
+	    }
 	}
 	http.send(JSON.stringify({user:user, pass: pass}));
 }

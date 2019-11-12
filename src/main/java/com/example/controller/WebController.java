@@ -30,6 +30,7 @@ import com.example.model.Historico;
 import com.example.model.Producto;
 import com.example.model.Producto_Desconocido;
 import com.example.model.Usuario;
+import com.example.returns.InfoProducto;
 import com.example.service.AReciclarServicioInterface;
 import com.example.service.CategoriaServicioInterface;
 import com.example.service.HistoricoServicioInterface;
@@ -62,42 +63,6 @@ public class WebController {
   HistoricoServicioInterface servicioHistorico;
   
   List<AReciclar> recicladosPorConfirmar = new ArrayList<>(); 
-  
-/*	@GetMapping(path = "/")
-	public String home(Model model, HttpSession session) {
-		@SuppressWarnings("unchecked")
-		List<String> messages = (List<String>) session.getAttribute("MY_SESSION_MESSAGES");
-		
-		long id = 1;
-		
-		if (messages == null) {
-			messages = new ArrayList<>();
-		}
-		model.addAttribute("sessionMessages", messages);
-		
-		model.addAttribute("sessionMessages",servicio.findById(id).toString());
-
-		return "index";
-	}
-
-	@PostMapping("/persistMessage")
-	public String persistMessage(@RequestParam("msg") String msg, HttpServletRequest request) {
-		@SuppressWarnings("unchecked")
-		List<String> msgs = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
-		if (msgs == null) {
-			msgs = new ArrayList<>();
-			request.getSession().setAttribute("MY_SESSION_MESSAGES", msgs);
-		}
-		msgs.add(msg);
-		request.getSession().setAttribute("MY_SESSION_MESSAGES", msgs);
-		return "redirect:/";
-	}
-
-	@PostMapping("/destroy")
-	public String destroySession(HttpServletRequest request) {
-		request.getSession().invalidate();
-		return "redirect:/";
-	}*/
   
   @GetMapping(path = "/guardarConParam/{id_prod},{barcode},{descripcion},{categoria}") //Guardar un producto en Producto harcodeado
   public String unProducto(@PathVariable(value="id_prod") long id_prod,@PathVariable(value="barcode") String barcode,@PathVariable(value="descripcion") String desc,@PathVariable(value="categoria") String categ){
@@ -218,15 +183,23 @@ public class WebController {
 	}
 	
 	
-	@GetMapping("/cargarProductosUsuario/{iduser}")
-	public List<Producto> cargarProductosUsuario(@PathVariable ("iduser") long iduser){
-		List<AReciclar> reciclables = servicioAReciclar.findByIdUser(iduser);
-		List<Producto> productos = new ArrayList<>();
-		for (AReciclar rec : reciclables){ 
-			Producto prod = servicio.findById(rec.getId_prod()); 
-			productos.add(prod);
-		} 
-		return productos;
+	@GetMapping("/cargarProductosUsuario")
+	public List<InfoProducto> cargarProductosUsuario(HttpServletRequest request){
+		
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		
+		if (creds != null) {
+			Usuario user = servicioUsuario.findByUsernameAndPassword(creds.get(0), creds.get(1));
+			List<AReciclar> reciclables = servicioAReciclar.findByIdUser(user.getIdUser());
+			List<InfoProducto> productos = new ArrayList<>();
+			for (AReciclar rec : reciclables){
+				Producto prod = servicio.findById(rec.getId_prod());
+				InfoProducto infoProducto = new InfoProducto( prod.getId_prod(), prod.getCodigoBarras(), prod.getDescripcion(), prod.getCategoria(), rec.getCantidad());
+				productos.add(infoProducto);
+			} 
+			return productos;
+		}
+		return new ArrayList<InfoProducto>();
 	}
 	
 	@GetMapping(path = "/recuperarDatos/{iduser},{inicio},{fin}") //Halla todos los productos de la tabla Productos

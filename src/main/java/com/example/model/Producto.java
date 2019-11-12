@@ -36,20 +36,20 @@ public class Producto  implements Serializable {
 	this.categoria=categoria;
   }
   
+  public Producto() {}
+  
   public long getId_prod() {
-	return id_prod;
-}
-
-public void setId_prod(long id_prod) {
-	this.id_prod = id_prod;
-}
-
-protected Producto(){
-  }
-  	public String getCodigoBarras() {
+	  return id_prod;
+	}
+	
+	public void setId_prod(long id_prod) {
+		this.id_prod = id_prod;
+	}
+	
+	public String getCodigoBarras() {
 		return barcode;
 	}
-
+	
 	public void setCodigoBarras(String codigoBarras) {
 		this.barcode = codigoBarras;
 	}
@@ -57,7 +57,7 @@ protected Producto(){
 	public String getDescripcion() {
 		return descripcion;
 	}
-
+	
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
@@ -65,17 +65,13 @@ protected Producto(){
 	public String getCategoria() {
 		return categoria;
 	}
-
+	
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Producto [id_prod=" + id_prod + ", barcode=" + barcode + ", descripcion=" + descripcion + ", categoria="
-				+ categoria + "]";
+		return "Producto [id_prod=" + id_prod + ", barcode=" + barcode + ", descripcion=" + descripcion + ", categoria=" + categoria + "]";
 	}
-	
-	
-
 }

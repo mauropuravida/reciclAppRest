@@ -11,7 +11,7 @@
     <link rel="icon" type="image/ico" sizes="16x16" href="../images/reciclapp.ico">
     <!-- import the webpage's javascript file 
     <script src="/script.js" defer></script>-->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="../manifest.json">
     <script src="../js/require.min.js"></script>
     <script src="../scan.js" ></script>
     <script src="../js/quagga.min.js"></script>
@@ -52,6 +52,7 @@ const h = window.innerHeight;//Utilizo las medidas de la pantalla para setear la
     }
     console.log("Initialization finished. Ready to start");
     Quagga.start();
+    console.log("Initialization finished. Ready to saliendo");
 });
   var codigo;
   Quagga.onDetected(function(data){

@@ -72,6 +72,12 @@ div.refactor{
     width: 70vw;
 }
 
+span.message{
+	text-align: center;
+	background-color: red;
+	width: 50vw;
+}
+
 th.row{
     font-size: 20px;
     text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;

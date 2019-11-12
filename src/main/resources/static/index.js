@@ -10,8 +10,8 @@ let topicButtons;
 let categoriaSeleccionada;
 let subcatSeleccionada;
 let listadoModificado;
-const servicio="https://f65b04bf.ngrok.io/";
-//const servicio="http://192.168.2.51:8080/";// ESTA TIENE QUE SER LA IP DEL SERVICIO REST
+//const servicio="https://f65b04bf.ngrok.io/";
+//const servicio="http://131.221.0.134/";// ESTA TIENE QUE SER LA IP DEL SERVICIO REST
 
 //zuix.using('script', './service-worker.js');
 zuix.using('style', '//zuixjs.github.io/zkit/css/flex-layout-attribute.min.css');
@@ -459,7 +459,57 @@ const categorias = { //ESTE JSON SE OBTENDRIA DE UNA REQUEST AL SERVIDOR CADA VE
     
 }
 
-const datosUser = { //ESTE JSON SE OBTENDRIA DE UNA REQUEST AL SERVIDOR CADA VEZ QUE VOY A ABRIR LA PWA
+var datosUser = {
+		"Casa" : {  //PESTAÑA CASA
+	    },
+	    "Recoleccion" :{ //PESTAÑA RECOLECCION
+	        "puntos":[]
+	    },
+	    "Graficos" : { //PESTAÑA GRAFICOS
+	        "graph":[],
+	        "title":"Materiales reciclados"
+	    },
+	    "Cuenta":{
+	        "nombreCompleto": "Gonzalo Coelho",
+	        "username":"gonxcoe",
+	        "address":"Fugl 873"
+	    },
+	    "Notificaciones":{
+	        "Ultima recoleccion":{}
+	    }
+	}
+
+
+function getAreciclar(){
+	var http = new XMLHttpRequest();
+	var url = "http://131.221.0.134/cargarProductosUsuario";
+	http.open("GET", url, true);
+	//http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+	
+	http.onreadystatechange = function() {
+	    if(http.readyState == 4 && http.status == 200) {
+	    	var arr = JSON.parse(this.responseText);
+	        for(i = 0; i < arr.length; i++) {
+	        	var descripcion = arr[i]["descripcion"];
+	        	console.log(descripcion);
+	        	
+	        	var item = "item"+i;
+	        	datosUser.Casa[item] = arr[i];
+	        	//datosUser.Casa[item]["cantidad"] = arr[i]["cantidad"];
+	        	//datosUser.casa.nuevo = arr[i]["cantidad"];
+	        	//datosUser."Casa" = arr[i];
+	        	console.log(arr[i]);
+	        }
+	    	//console.log(JSON.parse(this.responseText));
+	    }
+	}
+	http.send();
+	
+}
+
+getAreciclar();
+
+const datosUser2 = { //ESTE JSON SE OBTENDRIA DE UNA REQUEST AL SERVIDOR CADA VEZ QUE VOY A ABRIR LA PWA
     "Casa" : {  //PESTAÑA CASA
             "Coca cola":{
                 'cantidad':2
@@ -506,11 +556,12 @@ const datosUser = { //ESTE JSON SE OBTENDRIA DE UNA REQUEST AL SERVIDOR CADA VEZ
         }
     }
 }
+
 let jsonString=JSON.stringify(categorias);
 var obj= JSON.parse(jsonString); //Parseo el JSON con la informacion de las categorias
 jsonString=JSON.stringify(datosUser);
 const objeto= JSON.parse(jsonString);
-const datosUsuario=objeto.Casa;//Parseo el JSON con la informacion del usuario.
+const datosUsuario=datosUser.Casa;//Parseo el JSON con la informacion del usuario.
 function loadCuenta(){ //Carga los datos del usuario en la barra lateral (drawer)
     jsonString=JSON.stringify(datosUser);
     const objeto= JSON.parse(jsonString);
@@ -522,6 +573,7 @@ function loadCuenta(){ //Carga los datos del usuario en la barra lateral (drawer
     text=document.createTextNode(obj.address);
     document.getElementById("divAddress").appendChild(text);
 }
+
 // TODO: FIJARME SI DEBERIA AGREGAR LAS CATEGORIAS DE LOS PRODUCTOS
 function crearElementoListado(nombre,cantidad){ //Se crea un item que tiene un label, una cantidad y se puede modificar esta ultima.
     var pre=document.createElement('pre');
@@ -591,15 +643,17 @@ function generarListado(){ //Se lee un json para obtener todos los datos a carga
         sectionVieja.remove();
 
         //SI YA EXISTIA LO BORRO PARA ACTUALIZARLO
+    console.log("generando listado");
 
     var separador=document.getElementById("separadorEnCasa");
     var sectionNueva=document.createElement('section');
     sectionNueva.id="listado";
     separador.insertAdjacentElement('beforebegin',sectionNueva);
     for (const key in datosUsuario) {
+    	console.log("leyendo ");
         if (datosUsuario.hasOwnProperty(key)) {
             const element = datosUsuario[key];
-            crearElementoListado(key,element.cantidad);
+            crearElementoListado(element.descripcion,element.cantidad);
         }
     }
     

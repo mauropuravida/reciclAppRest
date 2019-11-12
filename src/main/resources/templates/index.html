@@ -57,6 +57,7 @@
 
   <!-- main app script -->
   <script src="../index.js" defer></script>
+  <script src="../coneccion.js" defer></script>
 
 </head>
 <!-- load the 'header_auto_hide' on the body -->
@@ -97,7 +98,7 @@
   // CODELAB: Register service worker.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./pwabuilder-sw.js')
+      navigator.serviceWorker.register('../pwabuilder-sw.js')
         .then((reg) => {
           console.log('Service worker registered.', reg);
         });
