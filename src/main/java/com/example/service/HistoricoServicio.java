@@ -14,26 +14,14 @@ public class HistoricoServicio implements HistoricoServicioInterface{
 	
 	@Autowired
 	HistoricoRepository historicoRepo;
-	
-	@Override
-	public List<Historico> recuperarDatos(long iduser, Date inicio, Date fin) {
-		return historicoRepo.recuperarDatos(iduser,inicio,fin);
-	}
 
 	@Override
 	public List<Historico> findByIdUser(long iduser) {
 		return historicoRepo.findByIdUser(iduser);
 	}
-
+	
 	@Override
-	public List<Historico> recuperarDatosSoloFin(long iduser, Date fin) {
-		return historicoRepo.recuperarDatosSoloFin(iduser,fin);
+	public List<Historico> recuperarDatosConFechas(long iduser, Date inicio, Date fin , List<Integer> materiales) {
+		return historicoRepo.recuperarDatos(iduser,inicio,fin, materiales);
 	}
-
-	@Override
-	public List<Historico> recuperarDatosSoloInicio(long iduser, Date inicio) {
-		return historicoRepo.recuperarDatosSoloInicio(iduser,inicio);
-	}
-
-
 }

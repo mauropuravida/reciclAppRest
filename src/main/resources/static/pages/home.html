@@ -1,14 +1,17 @@
 <head>
-<link rel="stylesheet"  href="./pages/home.css">
-<link rel="stylesheet"  href="./pages/notifications.css">
+<link rel="preload"  href="./pages/notifications.css">
+<link rel="stylesheet" href="../reciclapp/vanillaSelectBox.css">
+<link rel="preload"  href="./pages/home.css">
+<script src="../conexion.js" defer></script>
 </head>
 <div data-ui-load="@lib/controllers/view_pager"
       data-ui-options="options.viewPager"
       class="feed-pager"
+      onresize="ajustarMateriales()"
      >
     <!-- CARGAR -->
     <section id="seccionCargar" class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars" >
-        <button class="buttonReciclable" onclick="window.location.href = './scan.html';">
+        <button class="buttonReciclable" onclick="window.location.href = servicio+'reciclapp/scan.html';">
                 <img class="imgReciclable" src="./images/barcode.png" alt="Barcode image">
                 <br>
                 Cargar reciclables
@@ -21,7 +24,7 @@
         <script>
         generarBotones();
         </script>
-        <div id="formSubcategorias">
+        <div id="formSubcategorias" style="overflow-y:scroll;">
             <p id="explicacionForm">Indique la cantidad a reciclar</p>
             <br>
             <p id="prodSeleccionado"></p>
@@ -30,13 +33,14 @@
             <button class="botonModificable" onclick="decrementarInput('count',-1)">-</button>
             <button class="botonModificable" onclick="incrementarInput('count',1)">+</button>
             <div id="exampleModal" >
-                <button class="buttonCancel" onclick="salirForm()">Cancelar</button>
-                <button class="buttonConfirm" onclick="confirmarProducto()">Confirmar</button>
+                <button id="buttonCa" class="buttonCancel" onclick="salirForm()">Cancelar</button>
+                <button id="butCo" class="buttonConfirm" onclick="confirmarProducto()">Confirmar</button>
             </div>
+            <div class="message"><span id="message" ></span></div>
         </div>
     </section>
      <!-- EN CASA -->
-    <section class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars">
+    <section class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars" >
     <div>
         <h4> Reciclables en mi hogar</h4>
         <hr id="separadorEnCasa">
@@ -50,56 +54,54 @@
 
     </section>
     <!-- RECOLECCION -->
-    <section class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars">
+    <section id="mapOSM" class="content" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars" >
+    	<div id="imageDiv" ></div>
+    	<button id="generadorMapa" class="botonModificable" onclick="generarMapa()" >Mostrar mapa</button>
+        <div id="map_div" class="mapa" style="display:none"></div>
         
-    </select>
-        <div id="map_div" class="mapa"></div>
-        
-        <script type="text/javascript">
-        google.charts.load("current", {packages:["map"]});
-        google.charts.setOnLoadCallback(drawChart);
-        
-        //data is formatted for google map
-            jsonString=JSON.stringify(datosUser);// ESTE JSON LO OBTENGO DE UNA REQUEST AL SERVIDOR
-            const obj= JSON.parse(jsonString);
-            var origData = obj.Recoleccion.puntos;
-            function drawChart() {
-            //writes origData to html for initial view, line by line with breaks
-            // creates visualization using newData array
-            var options = {
-            mapType: 'normal',
-            showInfoWindow: true,
-            }
-            var data = google.visualization.arrayToDataTable(origData);
-            var map = new google.visualization.Map(document.getElementById('map_div'),{
-                zoom: 13,
-            });
-            map.draw(data, options);
-        }//end function
+        <script>
+	        var img = document.createElement("IMG");
+	        img.src = "images/construccion.jpg";
+	        img.id = "siteConstruct";
+	        document.getElementById('imageDiv').appendChild(img);
+	        document.getElementById('mapOSM').style.backgroundColor = "white";
+	        ajustarElementos();
         </script>
     </section>
     <!-- GRAFICOS -->
     <section class="contentGraficos" data-ui-load="@lib/controllers/header_auto_hide" data-ui-options="options.autoHidingBars">
-        <!-- Se genera la google chart con constantes -->
-        <script type="text/javascript">
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-            function drawChart() {
-                jsonString=JSON.stringify(datosUser);
-                const obj= JSON.parse(jsonString);
-                var data = google.visualization.arrayToDataTable(obj.Graficos.graph);
-                var options = {
-                    //title: obj.Graficos.title,
-                    //width:'30px',
-                    //chartArea:{left:20,top:0,width:'40%',height:'70%'},
-                    legend:{position: 'bottom', textStyle: {color: 'blue',alignment:'center'}},
-                    backgroundColor:'#EAECEA'
-                };
-                var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-                chart.draw(data, options);
-            }
-        </script>
-        <div class="chart" id="piechart"></div>
+	<div class="pruebaPos" id="primero" style="display: none">
+        <table >
+          <tr > 
+            <th scope="row" class="row"><h2>Inicio</h2></th> 
+            <td><span> 
+              <input id="fechaInicio" name="fechaInicio" type="date" min="2015-01-01" class="Input" size="20"  required="required"/> 
+            </span></td> 
+          </tr> 
+          <tr> 
+            <th scope="row" class="row"><h2>Fin</h2></th> 
+            <td><span> 
+              <input id="fechaFin" name="fechaFin" type="date" min="2015-01-01" class="Input" size="20"  required="required"/> 
+            </span></td> 
+          </tr>
+          <tr scope="row" class="row">
+          	<th id="demo-multiple" >
+				<td><select id="brandsMulti" multiple size="1" ></select></td>
+			</th>	
+          </tr>
+          <tr>
+            <th scope="row">
+            </th>
+            <th scope="row">
+				<button id="busqueda" class="botonModificable" onclick="generarGrafico()" >Buscar</button>
+            </th> 
+          </tr>
+        </table>
+	</div>
+	<div><button id="filtrar" class="botonModificable" onclick="mostrarMenuFiltro()" >Filtrar</button></div>
+    <div class="chart" id="piechart" onload="generarGrafico()" ></div>
+	<script>
+		getDate();
+	</script>
     </section>
-    
     </div> 

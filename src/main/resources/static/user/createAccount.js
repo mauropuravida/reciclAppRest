@@ -1,6 +1,6 @@
 function Create(){
 	var http = new XMLHttpRequest();
-	var url = servicio+"createU";
+	var url = servicio+"reciclapp/createU";
 	var name = document.getElementById("nombre").value;
 	var sername = document.getElementById("apellido").value;
 	var email = document.getElementById("email").value;
@@ -14,14 +14,14 @@ function Create(){
 	http.onreadystatechange = function() {
 	    if(http.readyState == 4 && http.status == 200) {
 	    	document.getElementById("message").style.visibility = "visible";
-	    	document.getElementById("message").style.backgroundColor = "green";
-	    	document.getElementById("message").innerHTML="La cuenta ha sido creada correctamente";
+	    	document.getElementById("message").style.backgroundColor = "#017396";
+	    	document.getElementById("message").innerHTML="La cuenta ha sido creada";
 	    	setTimeout(function(){document.getElementById("message").style.visibility = "hidden";}, 4*1000);
 	    }
 	    else{
 	    	document.getElementById("message").style.visibility = "visible";
 	    	document.getElementById("message").style.backgroundColor = "red";
-	    	document.getElementById("message").innerHTML="No se pudo crear cuenta, los campos son incorrectos";
+	    	document.getElementById("message").innerHTML="Los campos son incorrectos";
 	    	setTimeout(function(){document.getElementById("message").style.visibility = "hidden";}, 4*1000);
 	    }
 	}
@@ -29,7 +29,7 @@ function Create(){
 }
   
 function Back(){
-	window.location="../login.html";
+	window.location="../reciclapp/login.html";
 }
 
 function checkM(){
@@ -39,7 +39,7 @@ function checkM(){
 	if (email1 != email2){
 		document.getElementById("message").style.visibility = "visible";
     	document.getElementById("message").style.backgroundColor = "red";
-    	document.getElementById("message").innerHTML="Los campos de email no coinciden";
+    	document.getElementById("message").innerHTML="El email no coincide";
 	}
 	else{
 		document.getElementById("message").style.visibility = "hidden";
@@ -53,7 +53,7 @@ function checkC(){
 	if (email1 != email2){
 		document.getElementById("message").style.visibility = "visible";
     	document.getElementById("message").style.backgroundColor = "red";
-    	document.getElementById("message").innerHTML="Los campos de clave no coinciden";
+    	document.getElementById("message").innerHTML="La clave no coincide";
 	}
 	else{
 		document.getElementById("message").style.visibility = "hidden";
@@ -62,7 +62,7 @@ function checkC(){
 
 function checkMe(){
 	var http = new XMLHttpRequest();
-	var url = servicio+"checkEmail.html";
+	var url = servicio+"reciclapp/checkEmail.html";
 	var mail = document.getElementById("email").value;
 	http.open("POST", url, true);
 	http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -82,7 +82,7 @@ function checkMe(){
 
 function checkUser(){
 	var http = new XMLHttpRequest();
-	var url = servicio+"checkUser.html";
+	var url = servicio+"reciclapp/checkUser.html";
 	var user = document.getElementById("usuario").value;
 	http.open("POST", url, true);
 	http.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

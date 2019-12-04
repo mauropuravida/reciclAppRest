@@ -10,7 +10,7 @@ body {
     -ms-user-select:none;
     user-select:none;
     height:100vh;
-    background-image: url("/images/loginBackground.jpg");
+    background-image: url("/reciclapp/images/loginBackground.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x: center;
@@ -32,8 +32,13 @@ h1.title{
 .drawer {
     background: white;
 }
-button:hover{
-    opacity: 0.8;
+.boton:hover{
+    transform: scale(1.15);
+    cursor: pointer;
+}
+
+a:hover{
+	font-size: 20px;
     cursor: pointer;
 }
 
@@ -77,6 +82,9 @@ span.message{
 	text-align: center;
 	background-color: red;
 	width: 50vw;
+	font-size: 30px;
+	border-radius: 6px;
+	color: white;
 }
 
 th.row{

@@ -14,10 +14,10 @@ async function confirmar(){//ENVIA LA POST REQUEST al servidor con el producto q
     
     let aReciclar = {
         id_prod: json.id_prod,
-        id_user: 1030,
-        cantidad: 50//countScan.value
+        id_user: 0,
+        cantidad: countScan.value
       };
-      var url=servicio+"guardarReciclable";
+      var url=servicio+"reciclapp/guardarReciclable";
       let response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -45,8 +45,7 @@ function decrementarInput(){//Decrementa el contador de la form al cargar un pro
 
 
 async function entrarFormScan(codigo){ //SE ENVIA UNA GET REQUEST AL SERVIDOR CON EL CODIGO DE BARRAS PARA OBTENER INFORMACION DEL PRODUCTO
-    var url=servicio;
-    url+="codigo/"+codigo;
+    var url=servicio+"reciclapp/codigo/"+codigo;
     var sectionVieja=document.getElementById('ProductoScanned');
     if(sectionVieja!=null)
         sectionVieja.remove();

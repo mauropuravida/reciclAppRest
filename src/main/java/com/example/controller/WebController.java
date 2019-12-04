@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,15 +30,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.model.AReciclar;
 import com.example.model.Categoria;
 import com.example.model.Historico;
+import com.example.model.HistoricoResponse;
+import com.example.model.Notificacion;
 import com.example.model.Producto;
 import com.example.model.Producto_Desconocido;
+import com.example.model.RecoleccionesHistorial;
 import com.example.model.Usuario;
+import com.example.model.UsuarioResponse;
+import com.example.model.Filtro;
 import com.example.returns.InfoProducto;
 import com.example.service.AReciclarServicioInterface;
 import com.example.service.CategoriaServicioInterface;
 import com.example.service.HistoricoServicioInterface;
+import com.example.service.NotificacionesServicioInterface;
 import com.example.service.ProductoDesconocidoServicioInterface;
 import com.example.service.ProductoServicioInterface;
+import com.example.service.RecoleccionesHistorialServicioInterface;
 import com.example.service.UsuarioServicioInterface;
  
 @RestController
@@ -62,6 +72,12 @@ public class WebController {
   @Autowired
   HistoricoServicioInterface servicioHistorico;
   
+  @Autowired
+  RecoleccionesHistorialServicioInterface servicioRecolecciones;
+  
+  @Autowired
+  NotificacionesServicioInterface servicioNotificaciones;
+  
   List<AReciclar> recicladosPorConfirmar = new ArrayList<>(); 
   
   @GetMapping(path = "/guardarConParam/{id_prod},{barcode},{descripcion},{categoria}") //Guardar un producto en Producto harcodeado
@@ -77,16 +93,18 @@ public class WebController {
 	}
 	
 
-	@GetMapping(path = "/usuario/{id}") //Halla un usuario de la tabla Usuario por id
-	public ResponseEntity<Usuario> findById(@PathVariable(value="id") long id){
-		Usuario user = servicioUsuario.findByIdUser(id);
-		System.out.println("ayayay");
-		if(user==null) {
-			System.out.println("null");
-			return ResponseEntity.notFound().build();
+	@GetMapping(path = "/usuario") //Halla un usuario de la tabla Usuario por id
+	public UsuarioResponse usuario(HttpServletRequest request){
+		UsuarioResponse ur = new UsuarioResponse();
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds != null) {
+			Usuario user = servicioUsuario.findByUsernameAndPassword(creds.get(0), creds.get(1));
+			ur.setAddress(user.getAddress());
+			ur.setApellido(user.getApellido());
+			ur.setNombre(user.getNombre());
+			ur.setUsername(user.getUsername());
 		}
-		System.out.println("no null");
-		return ResponseEntity.ok().body(user);
+		return ur;
 	}
 	  
 
@@ -113,9 +131,15 @@ public class WebController {
 	}
 	
 	@PostMapping(value = "/guardarReciclable", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}) //Guarda una tupla en la tabla A_Reciclar de un json que viene 
-	public String ReciclarUsuarioProducto(@RequestBody AReciclar reciclable) {
-	    servicioAReciclar.save(reciclable);
-	    return "Se guardo un producto en la tabla A_Reciclar";
+	public ResponseEntity<?> ReciclarUsuarioProducto(@RequestBody AReciclar reciclable, HttpServletRequest request) {
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds != null) {
+			Usuario user = servicioUsuario.findByUsernameAndPassword(creds.get(0), creds.get(1));
+			reciclable.setId_user(user.getIdUser());
+			servicioAReciclar.save(reciclable);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@GetMapping("/categoria/{categoria}") //Halla el id_prod de la tabla categoria dado una categoria
@@ -123,38 +147,18 @@ public class WebController {
 		return servicioCategoria.findByCategoria(categ).getId_prod();
 	}
 	
+	//eliminar un producto por idproducto
 	@DeleteMapping(path = "/borrarProducto/{iduser},{idprod}") //borra una entrada en la tabla a_reciclar con un id_user y un id_prod como entrada
 	public String clearUser(@PathVariable("iduser") long iduser, @PathVariable("idprod") long idprod){
 	    servicioAReciclar.deleteByIdUserAndIdProd(iduser, idprod);
 	    return "Se borro";
 	}
 	
+	//retorna todas las categorias existentes en la bd
 	@GetMapping(value = "/cargarCategorias", produces = {MediaType.APPLICATION_JSON_VALUE})
 	public List<Categoria> cargarCateg(){
 		return servicioCategoria.findAll();
 	}
-	
-	/*@PostMapping(value = "/guardarUsuario", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}) //Guarda una usuario en la tabla Usuario de un json que viene 
-	public String guardarUsuario(@RequestBody Usuario usu) {
-		if(servicioUsuario.buscarPorUsername(usu.getUsername()) == false) {
-			servicioUsuario.save(usu);
-			return "Se guardo un usuario en la tabla Usuario";
-		}
-		else{ 
-			if(servicioUsuario.buscarPorMail(usu.getMail()) == false) {
-				servicioUsuario.save(usu);
-				return "Se guardo un usuario en la tabla Usuario";
-			}
-			else
-				return "No es posible guardar el usuario (mail existente o username existente)";
-		}
-	}*/
-	
-	/*@GetMapping(value = "/confirmarReciclados")
-	public String confirmarReciclados(String user){
-		servicioAReciclar.confirmarReciclados(user);
-		return "Se guardaron los datos correctamente";
-	}*/
 	
 	@GetMapping(path = "/actualizarReciclados/{iduser},{idprod}") 
 	public String actualizarReciclable(@PathVariable("iduser") long iduser, @PathVariable("idprod") long idprod) { //cuando se marca con tilde un producto que se esta por confirmar 
@@ -173,28 +177,30 @@ public class WebController {
 		return "se confirmo"; 
 	} 
 	
-	@GetMapping(path = "/existeUsuario", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public String existeUsuario(@RequestBody Usuario usu) {
-	    Usuario u = servicioUsuario.findByIdUserAndPassword(usu.getIdUser(),usu.getPassword());
-		if(u==null) {
-			return "";
-		}
-		return "";
+	//recuperar datos de puntos de recoleccion
+	@GetMapping("/puntos")
+	public List<RecoleccionesHistorial> puntos(HttpServletRequest request){
+		return servicioRecolecciones.findAll();
 	}
 	
+	//recuperar datos de notificaciones
+	@GetMapping("/notificaciones")
+	public List<Notificacion> notificaciones(HttpServletRequest request){
+		return servicioNotificaciones.findAll();
+	}
 	
+	//recuperar datos de usuario para mostrar en la parte de En Casa"
 	@GetMapping("/cargarProductosUsuario")
 	public List<InfoProducto> cargarProductosUsuario(HttpServletRequest request){
-		
 		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
-		
 		if (creds != null) {
 			Usuario user = servicioUsuario.findByUsernameAndPassword(creds.get(0), creds.get(1));
 			List<AReciclar> reciclables = servicioAReciclar.findByIdUser(user.getIdUser());
 			List<InfoProducto> productos = new ArrayList<>();
+			List<Categoria> cats = servicioCategoria.findAll();
 			for (AReciclar rec : reciclables){
-				Producto prod = servicio.findById(rec.getId_prod());
-				InfoProducto infoProducto = new InfoProducto( prod.getId_prod(), prod.getCodigoBarras(), prod.getDescripcion(), prod.getCategoria(), rec.getCantidad());
+				String nameCat =( cats.get((int) (rec.getId_prod()-1)).getCategoria());
+				InfoProducto infoProducto = new InfoProducto( rec.getId_prod(), "", "", nameCat, rec.getCantidad());
 				productos.add(infoProducto);
 			} 
 			return productos;
@@ -202,35 +208,53 @@ public class WebController {
 		return new ArrayList<InfoProducto>();
 	}
 	
-	@GetMapping(path = "/recuperarDatos/{iduser},{inicio},{fin}") //Halla todos los productos de la tabla Productos
-	public List<Historico> recuperarDatos(@PathVariable ("iduser") long iduser,@PathVariable ("inicio") Date inicio, @PathVariable ("fin") Date fin){
-		if(inicio!=null && fin!=null)
-			return servicioHistorico.recuperarDatos(iduser,inicio,fin);
-		else
-			if(inicio==null && fin==null)
-				return servicioHistorico.findByIdUser(iduser);
-			else
-				if(inicio == null)
-					return servicioHistorico.recuperarDatosSoloFin(iduser,fin);
-				else
-					return servicioHistorico.recuperarDatosSoloInicio(iduser,inicio);
-	}
-	
-	//NO FUNCIONA: no se porque, no llegue
-	@GetMapping(value = "/guardar/{iduser},{username},{nombre},{apellido},{password},{address},{mail}") 
-	public String guardar(@PathVariable(value="iduser") long iduser,@PathVariable(value="username") String username,@PathVariable(value="nombre") String nombre,@PathVariable(value="apellido") String apellido,@PathVariable(value="password") String password,@PathVariable(value="address") String address,@PathVariable(value="mail") String mail) {
-		if(servicioUsuario.findByUsername(username) == null) {
-			servicioUsuario.save(new Usuario(iduser,username,nombre,apellido,password,address,mail));
-			return "Se guardo un usuario en la tabla Usuario";
-		}
-		else{ 
-			if(servicioUsuario.findByMail(mail) == null) {
-				servicioUsuario.save(new Usuario(iduser,username,nombre,apellido,password,address,mail));
-				return "Se guardo un usuario en la tabla Usuario";
+	//para recuperar datos de los graficos estadisticos de torta
+	@PostMapping(value = "/recuperarDatos", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public List<HistoricoResponse> recuperarDatos(@RequestBody Filtro filtro, HttpServletRequest request){
+		
+		List<HistoricoResponse> response =new ArrayList<HistoricoResponse>();
+		
+		List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+		if (creds != null) {
+			List<Categoria> cats = servicioCategoria.findAll();
+			Usuario user = servicioUsuario.findByUsernameAndPassword(creds.get(0), creds.get(1));
+			if( filtro.getFechaInicio() == null && filtro.getFechaFin() == null) {
+				System.out.print(filtro.getFechaInicio()+" , "+filtro.getFechaFin()+" , "+filtro.getMateriales()+"\n");
+				for (Historico h:servicioHistorico.findByIdUser(user.getIdUser())) {
+					String nameCat =( cats.get((int) (h.getIdProd()-1)).getCategoria());
+					HistoricoResponse hr = new HistoricoResponse();
+					hr.setCantidad(h.getCantidad());
+					hr.setFecha(h.getFecha());
+					hr.setIdProd(h.getIdProd());
+					hr.setNameProducto(nameCat);
+					response.add(hr);
+				}
 			}
 			else
-				return "No es posible guardar el usuario (mail existente o username existente)";
+				if( filtro.getFechaInicio() != null && filtro.getFechaFin() != null){
+					System.out.print("con fechas\n");
+					List<Integer> materiales = new ArrayList<Integer>();
+					System.out.print(filtro.getMateriales()+"\n");
+					for (String st:filtro.getMateriales()) {
+						
+						if (servicioCategoria.findByCategoria(st) != null)
+							materiales.add((int) servicioCategoria.findByCategoria(st).getId_prod());
+					}						
+					System.out.print("materiales "+materiales.size()+" user "+user.getIdUser()+" Finicio "+filtro.getFechaInicio()+" Ffin "+filtro.getFechaFin()+"\n");
+					if (materiales.size() > 0)
+						System.out.print("size historicos "+servicioHistorico.recuperarDatosConFechas(user.getIdUser(), filtro.getFechaInicio(), filtro.getFechaFin(), materiales)+"\n");
+						for (Historico h:servicioHistorico.recuperarDatosConFechas(user.getIdUser(), filtro.getFechaInicio(), filtro.getFechaFin(), materiales)) {
+							String nameCat =( cats.get((int) (h.getIdProd()-1)).getCategoria());
+							HistoricoResponse hr = new HistoricoResponse();
+							hr.setCantidad(h.getCantidad());
+							hr.setFecha(h.getFecha());
+							hr.setIdProd(h.getIdProd());
+							hr.setNameProducto(nameCat);
+							response.add(hr);
+						}
+				}
 		}
+		System.out.print(response.size()+"\n");
+		return response;
 	}
-	
 }

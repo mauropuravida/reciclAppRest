@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="../user/changePass.css" >
-<script src="../user/changePass.js" defer></script>
-<script src="../coneccion.js" defer></script>
+<link rel="stylesheet" href="../reciclapp/user/changePass.css" >
+<script src="../reciclapp/user/changePass.js" defer></script>
+<script src="../reciclapp/conexion.js" defer></script>
 <title>Login</title>
 </head>
 
@@ -13,7 +13,7 @@
         <h1 class="title">
             Cambio de contraseña
           </h1>
-        <form name="login">
+        <form name="login" onSubmit="changePass();return false;" autocomplete="off">
             <table >
 			<tr> 
 			  <td scope="row" class="row"><h2></h2></td> 
@@ -22,26 +22,26 @@
               <tr> 
                 <th scope="row" class="row"><h2>Usuario</h2></th> 
                 <td><span class="cnt"> 
-                  <input name="usuario" id="user" type="text" class="Input" value="" size="20" /> 
+                  <input name="usuario" id="user" type="text" class="Input" value="" size="20"  placeholder="Usuario" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
                 </span></td> 
                 <th><input value="Solicitar código" id="boton1" target="_parent" onclick="Change()" type="button" class="boton"/></th>
               </tr>
 				<tr>
 				  <th scope="row" class="row"><h2>Código</h2></th> 
 				  <td><span class="cnt"> 
-				    <input name="usuario" type="text"  id="code" class="Input" value="" size="20" /> 
+				    <input name="usuario" type="text"  id="code" class="Input" value="" size="20"  placeholder="Usuario" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
 				  </span></td>
 				</tr> 
 				<tr> 
 				  <th scope="row" class="row"><h2>Nueva Contraseña</h2></th> 
 				  <td><span class="cnt"> 
-				    <input name="pass" type="text"  id="pass" class="Input" value="" size="20" /> 
+				    <input name="pass" type="text"  id="pass" class="Input" value="" size="20"  placeholder="Contraseña" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
 				  </span></td>
 				</tr>
 				<tr>
 					<th></th>
 					<th >
-						<input value="Cambiar Contraseña" id="boton2" target="_parent" onclick="Change()" type="button" class="boton"/>
+						<input value="Cambiar Contraseña" id="boton2" target="_parent" onclick="" type="submit" class="boton"/>
 					</th>
 				</tr>
 

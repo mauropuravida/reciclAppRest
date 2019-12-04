@@ -22,4 +22,9 @@ public class ChangePassService implements ChangePassServiceInterface {
 		return changePassRepo.findByUser(id);
 	}
 
+	@Override
+	public void delete(long user) {
+		changePassRepo.deleteAllByUser(user);
+	}
+
 }

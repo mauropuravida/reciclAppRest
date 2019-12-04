@@ -14,30 +14,30 @@
 
   <!-- Progressive Web App -->
   <meta name="theme-color" content="#f5f8fa">
-  <link rel="manifest" href="../manifest.json">
+  <link rel="manifest" href="../reciclapp/manifest.json">
 
   <!-- Add to homescreen for Chrome on Android -->
   <meta name="mobile-web-app-capable" content="yes">
-  <link rel="icon" sizes="192x192" href="../images/reciclapp.ico">
-  <link rel="icon" sizes="512x512" href="../images/reciclapp.ico">
+  <link rel="icon" sizes="192x192" href="../reciclapp/images/reciclapp.ico">
+  <link rel="icon" sizes="512x512" href="../reciclapp/images/reciclapp.ico">
 
   <!-- Add to homescreen for Safari on iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="A zUIx website">
-  <link rel="apple-touch-icon" href="./images/reciclapp.ico">
-  <link rel="mask-icon" href="../images/reciclapp.ico" color="#5bbad5">
+  <link rel="apple-touch-icon" href="./reciclapp/images/reciclapp.ico">
+  <link rel="mask-icon" href="../reciclapp/images/reciclapp.ico" color="#5bbad5">
 
   <!-- Tile color for Windows -->
-  <meta name="msapplication-TileImage" content="../images/reciclapp.ico">
+  <meta name="msapplication-TileImage" content="../reciclapp/images/reciclapp.ico">
   <meta name="msapplication-TileColor" content="#ffc40d">
 
   <!--  Place favicon.ico in the root directory ESTE ICONO ES SOLO UN PLACEHOLDER-->
-  <link rel="icon" type="image/ico" sizes="32x32" href="../images/reciclapp.ico">
-  <link rel="icon" type="image/ico" sizes="16x16" href="../images/reciclapp.ico">
+  <link rel="icon" type="image/ico" sizes="32x32" href="../reciclapp/images/reciclapp.ico">
+  <link rel="icon" type="image/ico" sizes="16x16" href="../reciclapp/images/reciclapp.ico">
   
   <!-- TODO SACAR ESTO-->
-  <link rel="preload" href="../pages/home.css" as="style">
+  <!--   <link rel="preload" href="../reciclapp/pages/home.css" as="style">-->
   <!-- SEO: If your mobile URL is different from the desktop URL, add a canonical link to the desktop page https://developers.google.com/webmasters/smartphone-sites/feature-phones -->
   <!--
   <link rel="canonical" href="http://www.example.com/">
@@ -47,42 +47,41 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
   <!-- import zUIx library (v 0.4.9-54) -->
-  <script src="../js/zuix.min.js"></script>
-  <script src="../js/zuix-bundler.min.js"></script>
+  <script src="../reciclapp/js/zuix.min.js" ></script>
+  <script src="../reciclapp/js/zuix-bundler.min.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   
-   <!-- TENGO QUE ACTIVAR EL BILLING DE LA API
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCa97hcgb3MLpRCj9pxdkJtWuSLugzf4XY" async defer></script>
-    -->
+  <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+	<link href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" rel="stylesheet"/>
 
   <!-- main app script -->
-  <script src="../index.js" defer></script>
-  <script src="../coneccion.js" defer></script>
+  <script src="../reciclapp/index.js" defer></script>
+  <script src="../reciclapp/conexion.js" defer></script>
 
 </head>
 <!-- load the 'header_auto_hide' on the body -->
-<body>
+<body onresize="ajustarElementos()" >
 
 <!-- The header with profile icon button for opening the drawer layout (side menu panel) -->
-<header id=header data-ui-include="../layout/header"
+<header id=header data-ui-include="../reciclapp/layout/header"
         data-ui-options="options.headerBar"
         data-ui-field="header-bar"></header>
 
 <main data-ui-field="pages">
 
   <!-- HOME -->
-  <section data-ui-include="../pages/home"></section>
+  <section data-ui-include="../reciclapp/pages/home"></section>
 
   <!-- NOTIFICATIONS -->
-  <section data-ui-include="../pages/notifications"></section>
+  <section data-ui-include="../reciclapp/pages/notifications"></section>
 
   <!-- ABOUT -->
-  <section data-ui-include="../pages/about" layout="column top-center"></section>
+  <section data-ui-include="../reciclapp/pages/about" layout="column top-center"></section>
 
 </main>
 
 <!-- The footer with toolbar buttons -->
-<footer id=footer data-ui-include="../layout/footer"
+<footer id=footer data-ui-include="../reciclapp/layout/footer"
         data-ui-options="options.footerBar"
         data-ui-field="footer-bar"></footer>
 
@@ -92,13 +91,13 @@
      class="drawer"
      draggable="false">
   <!-- Add Navigation Drawer content -->
-  <div data-ui-include="../shared/main_menu"></div>
+  <div data-ui-include="../reciclapp/shared/main_menu"></div>
 </div>
 <script>
   // CODELAB: Register service worker.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('../pwabuilder-sw.js')
+      navigator.serviceWorker.register('../reciclapp/pwabuilder-sw.js')
         .then((reg) => {
           console.log('Service worker registered.', reg);
         });

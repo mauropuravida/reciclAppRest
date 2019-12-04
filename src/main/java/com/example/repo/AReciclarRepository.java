@@ -27,6 +27,8 @@ public interface AReciclarRepository extends JpaRepository<AReciclar, Long>{
 
 	List<AReciclar> findByIdUser(long iduser);
 	
+	AReciclar save(AReciclar ar);
+	
 	/*@Query("INSERT INTO historico SELECT * FROM a_reciclar where id_user = :user ")
 	@Modifying
 	void confirmarReciclados(@Param("user") String user);*/

@@ -50,7 +50,6 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 	
 	@Override
 	public void setPass(String pass, long user) {
-		System.out.println(pass+" "+user+"\n");
 		usuarioRepo.setPass(user, pass);
 	}
 }

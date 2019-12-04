@@ -1,6 +1,7 @@
 package com.example.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -113,6 +114,12 @@ public class Usuario implements Serializable{
 				+ ", password=" + password + ", address=" + address + ", mail=" + mail + "]";
 	}
 	  
-	
+	public ArrayList<String> getAll(){
+		ArrayList<String> dats = new ArrayList<String>();
+		dats.add("username");dats.add(username);dats.add("nombre");dats.add(nombre);
+		dats.add("apellido");dats.add(apellido);dats.add("password");dats.add(password);
+		dats.add("address");dats.add(address);dats.add("email");dats.add(mail);
+		return dats;
+	}
 	  
 }

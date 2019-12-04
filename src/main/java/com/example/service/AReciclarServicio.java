@@ -19,6 +19,11 @@ public class AReciclarServicio implements AReciclarServicioInterface{
 	
 	@Override
 	public AReciclar save(AReciclar areciclar) {
+		//si existe el producto, sumo lo que ya tengo
+		AReciclar ar = findByIdUserAndIdProd(areciclar.getId_user(), areciclar.getId_prod());
+		if ( ar != null){
+			areciclar.setCantidad(areciclar.getCantidad()+ar.getCantidad());
+		}
 		return AReciclarRepo.save(areciclar);
 	}
 

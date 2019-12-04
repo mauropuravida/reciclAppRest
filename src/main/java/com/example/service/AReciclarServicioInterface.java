@@ -6,7 +6,7 @@ import com.example.model.AReciclar;
 
 public interface AReciclarServicioInterface {
 	
-	public AReciclar save(AReciclar prod);
+	public AReciclar save(AReciclar prod );
 
 	public void deleteByIdUserAndIdProd(long iduser, long idprod);
 

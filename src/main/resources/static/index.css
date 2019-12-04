@@ -16,6 +16,6 @@ body {
     background: white;
 }
 button:hover{
-    opacity: 0.8;
+    transform: scale(1.15);
     cursor: pointer;
 }

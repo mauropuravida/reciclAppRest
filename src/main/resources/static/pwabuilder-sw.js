@@ -22,7 +22,8 @@ const CACHE_NAME = 'static-cache-v1';
 
 // CODELAB: Add list of files to cache here.
 const FILES_TO_CACHE = [
-    '../offline.html',
+    '../reciclapp/offline.html',
+    '../reciclapp/images/sachet.jpg',
 ];
 
 self.addEventListener('install', (evt) => {
@@ -65,7 +66,7 @@ evt.respondWith(
         .catch(() => {
           return caches.open(CACHE_NAME)
               .then((cache) => {
-                return cache.match('../offline.html');
+                return cache.match('../reciclapp/offline.html');
               });
         })
 );

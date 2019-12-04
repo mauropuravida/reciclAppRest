@@ -1,27 +1,50 @@
 <div class="message" id="notificacionSeccion" self="stretch-stretch" layout="row center-center">
     <h1>
-        Ultimas recolecciones
+        Proximas recolecciones
     </h1>
-    <script>
+    <script>    
         function cargarNotificacion(fecha,direccion){
             var tooltip=document.createElement('span');
             tooltip.className="tooltiptext";
             tooltip.innerHTML=direccion;
             var notificacion=document.createElement('div');
+            notificacion.id="recorrido";
             notificacion.innerHTML=fecha;
             notificacion.appendChild(tooltip);
             notificacion.className="notificacion";
             var seccion=document.getElementById("notificacionSeccion");
             seccion.appendChild(notificacion);
         }
-        jsonString=JSON.stringify(datosUser);
-        const objeto= JSON.parse(jsonString);
-        const obj=objeto.Notificaciones;
-        for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                const element = obj[key];
-                cargarNotificacion(element.fecha,element.direccion);
-            }
-        }
+        
+    	//consulta datos de cuenta logeada
+    	var http = new XMLHttpRequest();
+    	var url = servicio+"reciclapp/notificaciones";
+    	http.open("GET", url, true);
+    	console.log("cargando");
+    	http.onreadystatechange = function() {
+    	    if( http.readyState == 4 && http.status == 200) {
+        
+    	    	var arr = JSON.parse(this.responseText);
+    	    	var notificaciones={};
+    	        notificaciones['notificacion'] = {}
+    	    	for(i = 0; i < arr.length; i++){
+    	    		notificaciones.notificacion[i] ={
+   		    		    direccion : arr[i]["direccion"],
+   		    		    fecha :  arr[i]["fecha"],
+   		    		}
+    	    	}
+    	    	
+		        var jsonString=JSON.stringify(notificaciones);
+		        const objeto= JSON.parse(jsonString);
+		        const obj=objeto.notificacion;
+		        for (const key in obj) {
+		            if (obj.hasOwnProperty(key)) {
+		                const element = obj[key];
+		                cargarNotificacion(element.fecha,element.direccion);
+		            }
+		        }
+			}
+    	}
+		http.send();
     </script>
 </div>
