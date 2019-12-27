@@ -2,16 +2,13 @@ package com.example.model;
 
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
  
 @Entity
-@Table(name = "productos")
+@Table(name = "producto")
 public class Producto  implements Serializable {
  
   @Id
@@ -26,10 +23,10 @@ public class Producto  implements Serializable {
   private String descripcion;
   
   @Column(name = "categoria")
-  private String categoria; 
+  private int categoria; 
 
  
-  public Producto(long id_prod, String codigoBarras, String descripcion, String categoria) {
+  public Producto(long id_prod, String codigoBarras, String descripcion, int categoria) {
 	this.id_prod=id_prod;
     this.barcode=codigoBarras;
 	this.descripcion=descripcion;
@@ -62,11 +59,11 @@ public class Producto  implements Serializable {
 		this.descripcion = descripcion;
 	}
 	
-	public String getCategoria() {
+	public int getCategoria() {
 		return categoria;
 	}
 	
-	public void setCategoria(String categoria) {
+	public void setCategoria(int categoria) {
 		this.categoria = categoria;
 	}
 	

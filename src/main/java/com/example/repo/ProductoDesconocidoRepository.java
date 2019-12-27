@@ -8,5 +8,7 @@ import com.example.model.Producto_Desconocido;
 
 @Repository
 public interface ProductoDesconocidoRepository extends JpaRepository<Producto_Desconocido, Long>{
+	Producto_Desconocido findByBarcode(String barcode);
 
+	void deleteById(long id);
 }

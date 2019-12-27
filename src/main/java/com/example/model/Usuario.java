@@ -1,8 +1,6 @@
 package com.example.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,12 +10,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "Usuario")
-public class Usuario implements Serializable{
+public class Usuario{
 
 	  @Id
-      @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  @Column(name = "id_user")
-	  private long idUser;
+	  @GeneratedValue(strategy = GenerationType.IDENTITY)
+	  private long id;
 	  
 	  @Column(name = "username")
 	  private String username;
@@ -34,18 +31,13 @@ public class Usuario implements Serializable{
 	  @Column(name = "address")
 	  private String address;
 	  
-	  @Column(name = "mail")
-	  private String mail;
-
-	public Usuario(long idUser, String username, String nombre, String apellido, String password, String address, String mail) {
-		super();
-		this.idUser = idUser;
+	public Usuario(long idUser, String username, String nombre, String apellido, String password, String address) {
+		this.id = idUser;
 		this.username = username;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.password = password;
 		this.address = address;
-		this.mail = mail;
 	}
 	
 	public Usuario() {
@@ -53,11 +45,11 @@ public class Usuario implements Serializable{
 	}
 
 	public long getIdUser() {
-		return idUser;
+		return id;
 	}
 
 	public void setIdUser(long idUser) {
-		this.idUser = idUser;
+		this.id = idUser;
 	}
 
 	public String getUsername() {
@@ -100,25 +92,17 @@ public class Usuario implements Serializable{
 		this.address = address;
 	}
 
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
 	@Override
 	public String toString() {
-		return "Usuario [idUser=" + idUser + ", username=" + username + ", nombre=" + nombre + ", apellido=" + apellido
-				+ ", password=" + password + ", address=" + address + ", mail=" + mail + "]";
+		return "Usuario [idUser=" + id + ", username=" + username + ", nombre=" + nombre + ", apellido=" + apellido
+				+ ", password=" + password + ", address=" + address + "]";
 	}
 	  
 	public ArrayList<String> getAll(){
 		ArrayList<String> dats = new ArrayList<String>();
 		dats.add("username");dats.add(username);dats.add("nombre");dats.add(nombre);
 		dats.add("apellido");dats.add(apellido);dats.add("password");dats.add(password);
-		dats.add("address");dats.add(address);dats.add("email");dats.add(mail);
+		dats.add("address");dats.add(address);
 		return dats;
 	}
 	  

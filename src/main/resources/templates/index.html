@@ -95,14 +95,15 @@
 </div>
 <script>
   // CODELAB: Register service worker.
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('../reciclapp/pwabuilder-sw.js')
-        .then((reg) => {
-          console.log('Service worker registered.', reg);
-        });
-});
-}
+	if ('serviceWorker' in navigator) {
+		window.addEventListener('load', () => {
+			navigator.serviceWorker.register('../reciclapp/pwabuilder-sw.js')
+	        .then((reg) => {
+				console.log('Service worker registered.', reg);
+			});
+		});
+	}
+
 </script>
 <noscript>
   Turn on JavaScript to access this site content.

@@ -16,7 +16,7 @@ public class ChangePass{
 	  private long id;
 	  
 	  @Column(name = "token")
-	  private String idChange;
+	  private String token;
 	  
 	  @Column(name = "date")
 	  private java.sql.Timestamp fecha;
@@ -28,12 +28,12 @@ public class ChangePass{
 		  fecha = new java.sql.Timestamp(System.currentTimeMillis());
 	  }
 	  
-	  public void setId(String id) {
-		  idChange=id;
+	  public void setToken(String token) {
+		  this.token=token;
 	  }
 	  
-	  public String getIdChange() {
-		  return idChange;
+	  public String getToken() {
+		  return token;
 	  }
 	  
 	  public java.sql.Timestamp getFecha(){

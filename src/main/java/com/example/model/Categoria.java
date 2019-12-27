@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,7 +12,7 @@ import javax.persistence.Table;
 public class Categoria implements Serializable{
 	  @Id
 	  @Column(name = "id_prod")
-	  private long id_prod;
+	  private long idProd;
 	  
 	  @Column(name = "categoria")
 	  private String categoria; 
@@ -23,11 +21,11 @@ public class Categoria implements Serializable{
 	  private String volumen;
 
 	public long getId_prod() {
-		return id_prod;
+		return idProd;
 	}
 
 	public void setId_prod(long id_prod) {
-		this.id_prod = id_prod;
+		this.idProd = id_prod;
 	}
 
 	public String getCategoria() {
@@ -48,7 +46,7 @@ public class Categoria implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Categoria [id_prod=" + id_prod + ", categoria=" + categoria + ", volumen=" + volumen + "]";
+		return "Categoria [id_prod=" + idProd + ", categoria=" + categoria + ", volumen=" + volumen + "]";
 	}
 
 }

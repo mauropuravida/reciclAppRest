@@ -1,11 +1,23 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html >
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
 <link rel="stylesheet" href="../reciclapp/user/createAccount.css" >
+<script src="../reciclapp/geocoder.js"></script>
 <script src="../reciclapp/user/createAccount.js" defer></script>
 <script src="../reciclapp/conexion.js" defer></script>
-<title>Login</title>
+
+<title>Crear Cuenta</title>
+  <!-- Progressive Web App -->
+  <meta name="theme-color" content="#f5f8fa">
+  <link rel="manifest" href="../reciclapp/manifest.json">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="../reciclapp/images/reciclapp.ico">
+  <link rel="icon" sizes="512x512" href="../reciclapp/images/reciclapp.ico">
 </head>
 
   <body>
@@ -22,60 +34,54 @@
                 <tr class="centrar" > 
                     <th scope="row" class="row"><h2>Nombre</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="nombre" id="nombre" type="text" class="Input" value="" placeholder="Nombre" size="20" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
+                        <input name="nombre" id="nombre" type="text" class="Input" value="" placeholder="Nombre" size="20" pattern="[A-ZñÑáéíóúÁÉÍÓÚa-z0-9]{3,20}" title="Ingrese su nombre" required/> 
                     </span></td> 
                 </tr> 
                 <tr> 
                     <th scope="row" class="row"><h2>Apellido</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="apellido" id="apellido" type="text" class="Input" value="" placeholder="Apellido" size="20" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required /> 
+                        <input name="apellido" id="apellido" type="text" class="Input" value="" placeholder="Apellido" size="20" pattern="[A-ZñÑáéíóúÁÉÍÓÚa-z0-9]{3,20}" title="Ingrese su apellido" required /> 
                     </span></td> 
                 </tr>
                 <tr > 
                     <th scope="row" class="row"><h2>Dirección</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="direccion" id="direccion" type="text" class="Input" value="" placeholder="Domicilio" size="20" pattern="[A-Za-z0-9 .-]{5,60}" title="Minimo 5 caracteres alfanumericos" required /> 
+                        <input name="direccion" id="direccion" type="text" class="Input" value="" onfocusOut="checkAddress()" placeholder="Domicilio" size="20" pattern="[A-Za-z0-9ñÑáéíóúÁÉÍÓÚ .-]{5,60}" title="Minimo 5 caracteres alfanumericos" required /> 
                     </span></td> 
                 </tr> 
                 <tr > 
                     <th scope="row" class="row"><h2>Email</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="email" id="email" type="email" class="Input" onfocusOut="checkMe()" value="" placeholder="Email" size="20" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 4}$" title="" required /> 
+                        <input name="email" id="email" type="email" class="Input" onfocusOut="checkMe()" value="" placeholder="Email" size="20" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}" title="" required /> 
                     </span></td> 
                 </tr>
-            	<tr > 
-                    <th scope="row" class="row"><h2></h2></th> 
-                    <td><span class="cnt"> 
-                        <input name="checkMa" id="checkMa" type="email" class="Input" onfocusOut="checkM()" value="" placeholder="Reescribir Email" size="20" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 4}$" title="" required/> 
-                    </span></td> 
-                </tr>                
-                <tr > 
-                    <th scope="row" class="row"><h2>Usuario</h2></th> 
-                    <td><span class="cnt"> 
-                        <input name="usuario" id="usuario" type="text" class="Input" onfocusout="checkUser()" value="" placeholder="Nombre de Usuario" size="20" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
-                    </span></td> 
-                </tr> 
                 <tr> 
                     <th height="33" scope="row" class="row"><h2>Clave</h2></th> 
                     <td><span class="cnt"> 
-                        <input name="password" id="pass" type="password" class="Input" value="" placeholder="Contraseña" size="20" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required /> 
+                        <input name="password" id="pass" type="password" class="Input" value="" placeholder="Minimo 5 caracteres alfanumericos" size="20" pattern="[A-ZñÑáéíóúÁÉÍÓÚa-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required /> 
                     </span></td> 
                 </tr>
                 <tr> 
                     <th height="33" scope="row" class="row"><h2></h2></th> 
                     <td><span class="cnt"> 
-                        <input name="password" id="passCh" type="password" class="Input" onfocusout="checkC()" value="" placeholder="Reescribir Contraseña" size="20" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required /> 
+                        <input name="password" id="passCh" type="password" class="Input" onfocusout="checkC()" value="" placeholder="Reescribir Contraseña" size="20" pattern="[A-ZñÑáéíóúÁÉÍÓÚa-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required /> 
                     </span></td> 
-                </tr> 
-                <tr height="60">
+                </tr>
+                <tr>
+                <th height="33"></th>
+                </tr>
+                <tr >
+                	<th scope="row"></th>
+            		<td class="g-recaptcha" data-sitekey="6LcjCMcUAAAAABcEjUHpvjiqWd1mqZl-_0HcwUrV" align="center" ></td>
+                </tr>
+                <tr height="60" >
                     <th scope="row"></th>
-                    <th scope="row">
-                        <input value="Registrar" target="_parent" onclick="" type="submit" class="boton"/>
+                    <th scope="row" width="400">
+                        <input value="Confirmar" target="_parent" onclick="" type="submit" class="boton"/>
                         <input value="Volver" target="_parent" onclick="Back()" type="button" class="boton"/>
                     </th> 
                 </tr> 
             </table> 
-        </form>
-    </div>
+        </form>	
   </body>
 </html>

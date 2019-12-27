@@ -1,25 +1,14 @@
 package com.example.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,27 +21,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.service.OkHttpPost;
 import com.example.model.ChangePass;
+import com.example.model.CreateUsuario;
 import com.example.model.DataChange;
 import com.example.model.UserRegister;
 import com.example.model.Usuario;
+import com.example.model.Notification;
 import com.example.service.ChangePassServiceInterface;
+import com.example.service.CurlPost;
 import com.example.service.ProductoServicioInterface;
 import com.example.service.SendMail;
+import com.example.service.UnirestSender;
 import com.example.service.UsuarioServicioInterface;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONObject;
 
 @Controller
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST,RequestMethod.DELETE,RequestMethod.PUT})
-//@RequestMapping (path ="/login.html")
 public class HTMLController {
 	
-	static final String patternStr = "[A-Za-z0-9]{5,20}";
-	static final String patternStrAddress = "[A-Za-z0-9 .-]{5,60}";
+	static final String patternStr = "[A-ZñÑáéíóúÁÉÍÓÚa-z0-9]{3,20}";
+	static final String patternStrAddress = "[0-9A-Za-zñÑáéíóúÁÉÍÓÚ .-]{5,60}";
 	static final String patternStrEmail = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 	static final String patternStrToken = "[A-Za-z0-9]{40}";
 	
@@ -64,6 +59,9 @@ public class HTMLController {
 	
 	@Autowired
 	ChangePassServiceInterface changePassService;
+	
+	@Autowired
+    private ObjectMapper objectMapper;
 	
 	@GetMapping(path = "/")
 	public String empty(HttpServletRequest request) { 
@@ -82,7 +80,6 @@ public class HTMLController {
 		try {
 			media = IOUtils.toByteArray(in);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -98,82 +95,12 @@ public class HTMLController {
 		try {
 			media = IOUtils.toByteArray(in);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	   CacheControl cacheControl = CacheControl.maxAge(31557600, TimeUnit.SECONDS);
 	   return ResponseEntity.ok().cacheControl(cacheControl).body(media);
 	}
-	
-	/*@GetMapping(value = "/js/{arch}")
-	ResponseEntity<File> js( @PathVariable String arch) {
-
-	    // Set the content-type
-	    //response.setHeader("Content-Type", "text/javascript");
-		String urlAsString = "/static/js/"+arch;
-		URL url = null;
-		try {
-			url = new URL(urlAsString);
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		File file = null;
-		try {
-			file = new File(url.toURI());
-		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-	    File path = new File("../static/js/"+arch);
-
-	    //File[] files = path.listFiles(...);
-
-	    //for (File file : files) {
-	        InputStream is = null;
-			try {
-				is = new FileInputStream(path);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        //IOUtils.copy(is, response.getOutputStream());
-	        //IOUtils.closeQuietly(is);
-	    //}
-
-	    //response.flushBuffer();
-	    CacheControl cacheControl = CacheControl.maxAge(31557600, TimeUnit.SECONDS);
-	    return ResponseEntity.ok().cacheControl(cacheControl).body(file);
-	}
-	
-	@GetMapping(value = "/download/{arch}")
-	public ResponseEntity<Resource> download(String arch) throws IOException {
-
-		String urlAsString = "/static/js/"+arch;
-		URL url = null;
-		try {
-			url = new URL(urlAsString);
-		} catch (MalformedURLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		File file = null;
-		try {
-			file = new File(url.toURI());
-		} catch (URISyntaxException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-	    InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-
-	    return ResponseEntity.ok()
-	            .contentLength(file.length())
-	            .contentType(MediaType.parseMediaType("application/octet-stream"))
-	            .body(resource);
-	}*/
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/index.html") 
 	public String index(HttpServletRequest request) { 
@@ -201,17 +128,21 @@ public class HTMLController {
         Pattern patternAddress = Pattern.compile(patternStrAddress);
 		for (int i=0;i<list.size();i=i+2) {
 			Matcher matcher = null;
-			if (list.get(i) == "email") 
-				matcher = pattern.matcher(list.get(i+1));
+			if (list.get(i) == "email" || list.get(i) == "user" || list.get(i) == "username") {
+				matcher = patternEmail.matcher(list.get(i+1));
+			}
 			else
-				if(list.get(i) == "direccion")
+				if(list.get(i) == "direccion" || list.get(i) == "address") {
 					matcher = patternAddress.matcher(list.get(i+1));
+				}
 				else
-					if (list.get(i) != "token")
-						matcher = patternEmail.matcher(list.get(i+1));
-					else
+					if (list.get(i) != "token") {
+						matcher = pattern.matcher(list.get(i+1));
+					}
+					else {
 						matcher = patternToken.matcher(list.get(i+1));
-			if (matcher.matches())
+					}
+			if (!matcher.matches())
 				return false;
 		}
 		return true;
@@ -222,6 +153,7 @@ public class HTMLController {
 	public ResponseEntity<?> persistMessage(@RequestBody UserRegister userRegister, HttpServletRequest request) {
 		
         if (checkPatterns(userRegister.getAll())) {
+        	userRegister.setPass(sha1(userRegister.getPass()));
 			Usuario user = servicioUsuario.findByUsernameAndPassword(userRegister.getUser(), userRegister.getPass());
 			if (user != null) {
 				List<String> creds = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
@@ -286,6 +218,7 @@ public class HTMLController {
 		return "offline";
 	}
 	
+	//verificar si existe usuario
 	@PostMapping(path ="/checkUser.html",consumes = "application/json")
 	public ResponseEntity<?> checkUser(HttpServletRequest request, @RequestBody String user) {
 		String[] usuario=user.split(":");
@@ -299,17 +232,109 @@ public class HTMLController {
 			}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
+
+	//suscribir a notificaciones
+	@PostMapping(path ="/suscribir",consumes = "application/json")
+	public ResponseEntity<?> suscribir(HttpServletRequest request, @RequestBody String token) {
 	
+		JSONObject tokenn = new JSONObject(token);
+        String tok = tokenn.getString("token");
+		
+		String url = "https://iid.googleapis.com/iid/v1/"+tok+"/rel/topics/notificacion";
+		OkHttpPost post = new OkHttpPost();
+		UnirestSender uPost = new UnirestSender();
+		CurlPost cPost = new CurlPost();
+
+		String apiKey = "AIzaSyClQ908rsePcohCqd1-BpcCNabUIHqiE8Q";
+		try {
+			post.post("{}", url, apiKey);
+			//uPost.post(url,apiKey, "{}");
+			//cPost.post(url,apiKey, "{}");
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@PostMapping(path ="/notificar",consumes = "application/json")
+	public ResponseEntity<?> sendNotification(HttpServletRequest request, @RequestBody Notification notification) {
+		System.out.println("NOTIFICANDO");
+		String url = "https://fcm.googleapis.com/fcm/send";
+		String key = "AAAACLHlOgY:APA91bFxOgxhQqW92xHbzLDAdEFbt6BrfQkYRHj3OYw4zivsxUld5LPDKfGUU7kqZGUuvNgvIPIADFiv-QsteeiVGZXuRlhRivGbN-S1VdNFjZFA0QuOsSFrJhNxi1XYj2nmRnxTs4ku";
+		OkHttpPost post = new OkHttpPost();
+		UnirestSender uPost = new UnirestSender();
+		CurlPost cPost = new CurlPost();
+		
+		String mensaje = "{ \n\t\"notification\": {\n\t \"title\": \""+notification.getTitle()+"\",\n\t \"body\": \""+notification.getBody()+"\"\n\t },\n\n\"to\" : \"/topics/notificacion\"\n}";
+
+		try {
+			post.post(mensaje,url,key);
+			//uPost.post(url,key, mensaje);
+			//cPost.post(url,key, mensaje);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+
+	
+	//crear usuario
 	@PostMapping(path ="/createU",consumes = "application/json")
-	public ResponseEntity<?> check(HttpServletRequest request, @RequestBody Usuario user) {
-		if (checkPatterns(user.getAll())) {			
-			if(servicioUsuario.findByUsername(user.getUsername()) == null && servicioUsuario.findByMail(user.getMail()) == null) {
-				servicioUsuario.save(user);
-				return new ResponseEntity<>(HttpStatus.OK);
-			}
+	public ResponseEntity<?> check(HttpServletRequest request, @RequestBody CreateUsuario user)throws IOException {
+		if (checkPatterns(user.getAll())) {
+			
+			String url= "https://www.google.com/recaptcha/api/siteverify?secret=6LcjCMcUAAAAAI9U-xEGhzt-9xjsaMsdS3bQynA3&response="+user.getResponse();
+			
+			OkHttpClient client = new OkHttpClient();
+			
+			Request reques = new Request.Builder().url(url).build();
+			boolean verify = false;
+			
+			//Descomentar las lineas para que funcione el captcha
+//			try (Response response = client.newCall(reques).execute()) {
+				
+//				String jsonData = response.body().string();
+//			    JSONObject Jobject = new JSONObject(jsonData);
+				
+			  
+				verify = true;//Jobject.getBoolean("success");
+				
+				Usuario us = servicioUsuario.findByUsernameAndPassword(user.getUsername(), user.getPassword());
+				if (us == null && verify ) {
+					Usuario u = new Usuario(0,user.getUsername(),user.getNombre(),user.getApellido(),user.getPassword(),user.getAddress());
+					u.setPassword(sha1(u.getPassword()));
+					if(servicioUsuario.save(u) != null) {
+						return new ResponseEntity<>(HttpStatus.OK);
+					}
+				}
+
+//			}
+//			catch (Exception e) {
+//				System.out.println("ERROR DE LA CONSULTA \n"+e);
+//				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//			}
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
+	
+	//encriptar contraseña
+	private String sha1(String txt) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA1");
+            byte[] array = md.digest(txt.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 	
 	@PostMapping(path ="/checkEmail.html",consumes = "application/json")
 	public ResponseEntity<?> checkMail(HttpServletRequest request, @RequestBody String mail) {
@@ -319,9 +344,11 @@ public class HTMLController {
 		ArrayList<String> arr = new ArrayList<String>();
 		arr.add("email");arr.add(userNameRef);
 		if (checkPatterns(arr))
-			if(servicioUsuario.findByMail(userNameRef) == null) {
+			if(servicioUsuario.findByUsername(userNameRef) == null) {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
+			else		
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 	
@@ -336,14 +363,14 @@ public class HTMLController {
 		if (checkPatterns(arr)) {
 		Usuario usu = servicioUsuario.findByUsername(userNameRef);
 			if( usu != null) {
-				String data = usu.getMail()+usu.getAddress()+usu.getPassword()+usu.getApellido()+ RandomStringUtils.randomAlphanumeric(10);
+				String data = usu.getUsername()+usu.getAddress()+usu.getPassword()+usu.getApellido()+ RandomStringUtils.randomAlphanumeric(10);
 				String hash=getHash(data, "SHA1");
 				ChangePass cp = new ChangePass();
-				cp.setId(hash);
+				cp.setToken(hash);
 				cp.setUser(usu.getIdUser());
 				changePassService.delete(cp.getUser());
 				changePassService.save(cp);
-				SendMail sm = new SendMail(usu.getMail(), hash);
+				SendMail sm = new SendMail(usu.getUsername(), hash);
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
@@ -354,10 +381,12 @@ public class HTMLController {
 	public ResponseEntity<?> changeOldPass(HttpServletRequest request, @RequestBody DataChange data) {
 		
 		if (checkPatterns(data.getAll())) {
-			ChangePass cp= changePassService.findByToken(servicioUsuario.findByUsername(data.getUser()).getIdUser());
+			ChangePass cp= changePassService.findByToken(data.getToken());
 			
 			if(cp != null && cp.getUser() == servicioUsuario.findByUsername(data.getUser()).getIdUser()) {
+				data.setPass(sha1(data.getPass()));
 				servicioUsuario.setPass(data.getPass(), cp.getUser());
+				changePassService.delete(cp.getUser());
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}

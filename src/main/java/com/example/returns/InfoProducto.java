@@ -11,13 +11,31 @@ public class InfoProducto {
 	private String categoria;
 	
 	private long cantidad;
+	
+	private boolean consenso;
+	
+	private float volumen;
+	
+	private float peso;
+	
+	public InfoProducto() {
+		consenso = false;
+	}
 	  
-	public InfoProducto(long id_prod, String codigoBarras, String descripcion, String categoria, long cantidad) {
+	public InfoProducto(long id_prod, String barcode, String descripcion, String categoria, long cantidad) {
 		this.id_prod=id_prod;
-	    this.barcode=codigoBarras;
+	    this.barcode=barcode;
 		this.descripcion=descripcion;
 		this.categoria=categoria;
 		this.cantidad=cantidad;
+	}
+	
+	public void setConsenso(boolean c) {
+		consenso = c;
+	}
+	
+	public boolean getConsenso() {
+		return consenso;
 	}
 	  
 	public long getId_prod() {
@@ -28,12 +46,12 @@ public class InfoProducto {
 		this.id_prod = id_prod;
 	}
 	
-	public String getCodigoBarras() {
+	public String getBarcode() {
 		return barcode;
 	}
 	
-	public void setCodigoBarras(String codigoBarras) {
-		this.barcode = codigoBarras;
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
 	
 	public String getDescripcion() {
@@ -63,7 +81,23 @@ public class InfoProducto {
 	@Override
 	public String toString() {
 		return "Producto [id_prod=" + id_prod + ", barcode=" + barcode + ", descripcion=" + descripcion + ", categoria="
-				+ categoria + cantidad + "]";
+				+ categoria + ", cantidad=" + cantidad + ", volumen=" + volumen + ", peso=" + peso + ", consenso=" + consenso + "]";
+	}
+
+	public float getVolumen() {
+		return volumen;
+	}
+
+	public void setVolumen(float volumen) {
+		this.volumen = volumen;
+	}
+
+	public float getPeso() {
+		return peso;
+	}
+
+	public void setPeso(float peso) {
+		this.peso = peso;
 	}
 	
 }

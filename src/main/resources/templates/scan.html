@@ -57,30 +57,10 @@ const h = window.innerHeight;//Utilizo las medidas de la pantalla para setear la
 });
   var codigo;
   Quagga.onDetected(function(data){
-      //console.log(data.codeResult.code);
       document.querySelector('#resultado').innerHTML = data.codeResult.code;
       codigo= data.codeResult.code;
       console.log("El codigo es " + codigo);
-      /* EN EL CASO QUE DEJO QUE SE REPITA MUCHAS VECES Y ME QUEDO CON EL QUE MAS REPETICIONES TENGA
-          cont++;
-          if(cont=20) then{
-              for(i=0 to arr.length){
-                  if(arrnum[i]>maxrep){
-                      maxrep=arrnum[i];
-                      maxcod=arr[i];
-                  }
-              }
-              console.log(maxcod);
-              Quagga.stop();
-          }
-          else{
-              for(i=0 to arr.length){
-                  if(arr[i]==codigo)
-                      arrnum[i]++;
-              }
-          }
-          }
-      */
+
      //ESTO ME SIRVE SI QUIERO QUE DEVUELVA UNA SOLA VEZ, IGUALMENTE CIERRA LA CAMARA
      Quagga.stop();
      entrarFormScan(codigo);
@@ -88,53 +68,73 @@ const h = window.innerHeight;//Utilizo las medidas de la pantalla para setear la
     </script>
   
   <div id="formCodigoDetectado">
-    <p id="scanText" >Se detecto el siguiente producto</p>
-    <p class=p_inline>Cantidad: <input id="countScan" type="number" name="Cantidad" min="1" max="500" value="1"></p>
-    <button class="botonModificable" onclick="decrementarInput()">-</button>
-    <button class="botonModificable" onclick="incrementarInput()">+</button>
+    <h2 id="scanText1" >SE DETECTO EL SIGUIENTE PRODUCTO</h2><br>
+    <p class=p_inline>Cantidad: <input class="countBoton" id="countScanInput2" type="number" name="Cantidad" min="1" max="500" value="1"/></p>
+    <button class="botonModificable" onclick="decrementar(countScanInput2)">-</button>
+    <button class="botonModificable" onclick="incrementar(countScanInput2)">+</button>
     <div id="exampleModal" >
         <button class="buttonCancel" onclick="quit()">Cancelar</button>
-        <button class="buttonConfirm" onclick="confirmar()">Confirmar</button>
+        <button class="buttonConfirm" onclick="confirmar(countScanInput2)">Confirmar</button>
     </div>
   </div>
   <div id="formCodigoNoDetectado">
-    <p>No se detectó el codigo de un producto valido</p>
+    <h2>No se detectó el codigo de un producto valido</h2>
     <div id="exampleModal" >
         <button class="buttonCancel" onclick="quit()">Reintentar</button>
-        <button class="buttonConfirm" onclick="loadFormProductoDesconocido()"  >Indicar un producto similar</button>
-        <!--  
-          "window.location.href = './index.html'"
-        "loadFormProductoDesconocido()"//Aca hay que implementar el sistema de voting 
-        -->
     </div>
   </div>
-  <div id="formCargarProductoDesconocido"> <!-- Aca habria que actualizar el select con los datos del JSON categorias.json  -->
-    <p>Indique que producto más se asemeje al que quiere reciclar</p>
-    <select id="categorias">
-      <option value="volvo">Vidrio chico</option>
-      <option value="saab">Vidrio mediano</option>
-      <option value="mercedes">Vidrio grande</option>
-      <option value="volvo">Tetrabrik chico</option>
-      <option value="saab">Tetrabrik mediano</option>
-      <option value="mercedes">Tetrabrik grande</option>
-      <option value="volvo">Doypack chico</option>
-      <option value="saab">Doypack mediano</option>
-      <option value="mercedes">Doypack grande</option>
-      <option value="volvo">Plastico chico</option>
-      <option value="saab">Plastico mediano</option>
-      <option value="mercedes">Plastico grande</option>
-      <!--  ESTAS -->
-    </select>
-
+  <div id="formConsenso">
+  <h2 id="scanText2" >SE DETECTO EL SIGUIENTE PRODUCTO EN CONSENSO</h2>
+        
+    <form name="consenso" autocomplete="off">
+    <table >
+      <tr > 
+        <th scope="row" class="row"><p>Barcode</p></th> 
+        <td>
+          <input id="barcode" name="barcode" type="text" class="Input" value="" readonly/> 
+        </td> 
+      </tr>
+      <tr > 
+        <th scope="row" class="row"><p>Descripcion</p></th> 
+        <td>
+          <input id="description" name="description" class="Input"  type="text" value="" /> 
+        </td> 
+      </tr>
+      <tr > 
+        <th scope="row" class="row"><p>Categoria</p></th> 
+        <td>
+          <select id="categoria" class="selectCategoria">
+          </select>
+        </td> 
+      </tr> 
+      <tr > 
+        <th scope="row" class="row"><p>Volumen</p></th> 
+        <td>
+          <input id="volumen" name="volumen" type="number" class="Input" value="" placeholder="Volumen"title="Ingrese un volumen para el producto" /> 
+        </td> 
+      </tr> 
+      <tr> 
+        <th height="33" scope="row" class="row"><p>Peso</p></th> 
+        <td>
+          <input id="peso" name="peso" type="number" class="Input" value="" placeholder="Peso" title="Ingrese un peso para el producto" /> 
+        </td> 
+      </tr>
+      <tr> 
+        <th height="33" scope="row" class="row"></th> 
+        <td>
+        </td>
+      </tr>
+    </table> 
+    </form>
+    <p class=p_inline>Cantidad: <input class="countBoton" id="countScanInput1" type="number" name="Cantidad" min="1" max="500" value="1"/></p>
+    <button class="botonModificable" onclick="decrementar(countScanInput1)">-</button>
+    <button class="botonModificable" onclick="incrementar(countScanInput1)">+</button>
     <div id="exampleModal" >
         <button class="buttonCancel" onclick="quit()">Cancelar</button>
-        <button class="buttonConfirm" onclick="confirmar()" >Confirmar</button>
+        <button id="confirmarConsenso" class="buttonConfirm" onclick="confirmar(countScanInput1)">Confirmar</button>
     </div>
   </div>
   
   <button class="buttonCamera" onclick="window.location.href = '../reciclapp/index.html'" >Volver</button>
-  <!--  "window.location.href = './index.html'"
-  "entrarFormScan('1234567890987')"
-  -->
   </body>
 </html>

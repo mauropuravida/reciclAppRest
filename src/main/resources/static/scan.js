@@ -1,31 +1,48 @@
 let json;
-//const servicio="http://131.221.0.134/";// ESTA TIENE QUE SER LA IP y puerto DEL SERVICIO REST
-//const servicio="https://f65b04bf.ngrok.io/"
+
 function salirFormScan(){
     window.location.href='#';
 }
 
-async function confirmar(){//ENVIA LA POST REQUEST al servidor con el producto que se reciclo
-    salirFormScan();
-    restartQuagga();
-    //
-    //SE LE PEGARIA AL SERVIDOR CON LO ELEGIDO
-    //
+async function confirmar(id){//ENVIA LA POST REQUEST al servidor con el producto que se reciclo
+	
+    let aReciclar;
+    var url;
+    if (json.consenso.toString() == "true"){
+    	var e = document.getElementById("categoria");
+    	var value = e.selectedIndex;
+    	console.log("el barcode es "+json.barcode);
+    	
+    	aReciclar = {
+	        id_prod: Number(value),
+	        cantidad: id.value,
+	        barcode: json.barcode,
+	        descripcion: document.getElementById('description').value,
+    		categoria: Number(value),
+	    	volumen: document.getElementById('volumen').value,
+	    	peso: document.getElementById('peso').value
+    	};
+    	url=servicio+"reciclapp/guardarReciclableConsenso";
     
-    let aReciclar = {
-        id_prod: json.id_prod,
-        id_user: 0,
-        cantidad: countScan.value
-      };
-      var url=servicio+"reciclapp/guardarReciclable";
-      let response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json', //ESTO SOLUCIONA EL CORS (CROSS ORIGIN RESOURCE SHARING)
-            'mode': 'no-cors'
-        },
-        body: JSON.stringify(aReciclar)
-      });
+    }else{
+	    aReciclar = {
+	        id_prod: json.id_prod,
+	        cantidad: id.value
+		};
+	    
+	    url=servicio+"reciclapp/guardarReciclable";
+    }
+    
+	let response = await fetch(url, {
+		method: 'POST',
+		headers: {
+		    'Content-Type': 'application/json', //ESTO SOLUCIONA EL CORS (CROSS ORIGIN RESOURCE SHARING)
+		    'mode': 'no-cors'
+		},
+	    body: JSON.stringify(aReciclar)
+	});
+	
+	quit();
 }
 
 function quit(){ //Se ejecuta al cancelar y se sale de la form.
@@ -33,16 +50,14 @@ function quit(){ //Se ejecuta al cancelar y se sale de la form.
     restartQuagga();
 }
 
-function incrementarInput(){//Incrementa el contador de la form al cargar un producto
-    countScan.value++;
+function incrementar(id){//Incrementa el contador de la form al cargar un producto	
+	id.value++;
 }
 
-function decrementarInput(){//Decrementa el contador de la form al cargar un producto
-    if(countScan.value!=1)
-        countScan.value--;
+function decrementar(id){//Decrementa el contador de la form al cargar un producto
+    if(id.value!=1)
+    	id.value--;
 }
-
-
 
 async function entrarFormScan(codigo){ //SE ENVIA UNA GET REQUEST AL SERVIDOR CON EL CODIGO DE BARRAS PARA OBTENER INFORMACION DEL PRODUCTO
     var url=servicio+"reciclapp/codigo/"+codigo;
@@ -50,35 +65,58 @@ async function entrarFormScan(codigo){ //SE ENVIA UNA GET REQUEST AL SERVIDOR CO
     if(sectionVieja!=null)
         sectionVieja.remove();
     let response = await fetch(url);
-
     if (response.ok) { // if HTTP-status is 200-299
         // get the response body (the method explained below)
         console.log("PRODUCTO DETECTADO");
         json = await response.json();
         console.log(json);
 
-        window.location.href='#formCodigoDetectado';
-        const referencia=document.getElementById("scanText");
-        var sectionNueva=document.createElement('section');
-        sectionNueva.id='ProductoScanned';
+        var ref;
+        if (json.consenso.toString() == "true"){
+        	window.location.href='#formConsenso';
+        	
+        	document.getElementById("barcode").value = json.barcode;
+        	document.getElementById("description").value = json.descripcion;
+        	document.getElementById("peso").value = json.peso;
+        	document.getElementById("volumen").value = json.volumen;
+        	cargarCategorias();
+        	console.log("dentro de consenso");
+        }
+        else{
+        	console.log("fuera de consenso");
+        	window.location.href='#formCodigoDetectado';
+        	ref=document.getElementById("scanText1");
+        	
+            var sectionNueva=document.createElement('section');
+            sectionNueva.id='ProductoScanned';
 
-        var p=document.createElement('p');// MUESTRO EL NOMBRE DEL PRODUCTO
-        p.innerHTML=json.descripcion;
-        if(json.descripcion!=null)
-        sectionNueva.appendChild(p);
-        var p2=document.createElement('p');//MUESTRO LA CATEGORIA DEL PRODUCTO
-        p2.innerHTML=json.categoria;
-        sectionNueva.appendChild(p2);
-        referencia.insertAdjacentElement('beforeend',sectionNueva);
-    } else {
-        entrarFormDesconocido();
-    }
+            var p5=document.createElement('p');//MUESTRO EL BARCODE DEL PRODUCTO
+            p5.innerHTML="Barcode : "+json.barcode;
+            sectionNueva.appendChild(p5);
+            var p=document.createElement('p');// MUESTRO EL NOMBRE DEL PRODUCTO
+            p.innerHTML="Nombre : "+json.descripcion;
+            if(json.descripcion!=null)
+            sectionNueva.appendChild(p);
+            var p2=document.createElement('p');//MUESTRO LA CATEGORIA DEL PRODUCTO
+            p2.innerHTML="Categoria : "+json.categoria;
+            sectionNueva.appendChild(p2);
+            var p3=document.createElement('p');// MUESTRO EL VOLUMEN DEL PRODUCTO
+            p3.innerHTML="Volumen : "+json.volumen;
+            if(json.descripcion!=null)
+            sectionNueva.appendChild(p3);
+            var p4=document.createElement('p');//MUESTRO EL PESO DEL PRODUCTO
+            p4.innerHTML="Peso : "+json.peso;
+            sectionNueva.appendChild(p4);
+            
+            ref.insertAdjacentElement('beforeend',sectionNueva);
+        }
+    } else 
+		if (response.status >= 400 && response.status < 600) 
+			entrarFormDesconocido();
 }
 
 function entrarFormDesconocido(){ //ESTA form se activaria cuando se desconoce el producto
-    console.log("El codigo de barras ingresado no esta asociado a un producto valido aun");
     window.location.href='#formCodigoNoDetectado';
-
 }
 
 function restartQuagga(){//Inicializa Quagga de nuevo para otra lectura de codigo de barras
@@ -112,19 +150,32 @@ function restartQuagga(){//Inicializa Quagga de nuevo para otra lectura de codig
      Quagga.start();
  });
 }
-function loadFormProductoDesconocido(){
-    window.location.href = '#formCargarProductoDesconocido';
-    // Hay que ver como acceder al JSON que estoy usando en index.js. Ese json es el que me devolveria el servicio REST en una request
-    // al abrir la web. Esto se hace asi porque se cargan los botones a partir de ese json y no estaticamente. Esto esta bueno por si 
-    //hay que agregar nuevas categorias
 
-    //
-    // var id_prod_generico = get_id_prod (subcategoria elegida por el usuario) <-- esta es una request del servicio REST
-    // Una vez que obtengo un id_prod que represente el tamaño acorde a la categoria que eligio el usuario debo hacer 2 POST requests
-    // El orden no importa. 
-    // La primera seria :
-    // @PostMapping(value = "/guardarReciclable", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    // La segunda
-    //@PostMapping(value = "/guardarProdDesc", consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+async function cargarCategorias(){
+	var http2 = new XMLHttpRequest();
+	var url = servicio+"reciclapp/cargarCategorias";
+	
+	http2.open("GET", url, true);
+	
+	http2.onreadystatechange = function() {
+	    if(http2.readyState == 4 && http2.status == 200) {
+	    	//parseo la respuesta
+	    	var arr = JSON.parse(this.responseText);
+	    	document.getElementById("categoria").options.length = 0;
 
+	    	for(i = 0; i < arr.length; i++){
+	    		var option = document.createElement("option");
+	    		option.value = arr[i]["categoria"];
+	    		option.text = arr[i]["categoria"];
+	    		
+	    		var c = arr[i]["categoria"];
+	    		if( c == json.categoria){
+	    			option.selected = true;
+	    		}
+	    		
+	    		document.getElementById("categoria").appendChild(option);
+	    	}
+	    }
+	}
+	http2.send();
 }

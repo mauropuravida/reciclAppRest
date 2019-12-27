@@ -18,8 +18,8 @@ public class ChangePassService implements ChangePassServiceInterface {
 	}
 	
 	@Override
-	public ChangePass findByToken(long id) {
-		return changePassRepo.findByUser(id);
+	public ChangePass findByToken(String token) {
+		return changePassRepo.findByToken(token);
 	}
 
 	@Override

@@ -17,9 +17,5 @@ public interface UsuarioServicioInterface {
 
 	public Usuario findByUsername(String username);
 
-	public Usuario findByMail(String mail);
-
 	public void setPass(String pass, long user);
-
-
 }

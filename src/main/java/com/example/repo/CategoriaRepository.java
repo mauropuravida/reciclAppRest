@@ -9,5 +9,6 @@ import com.example.model.Categoria;
 public interface CategoriaRepository extends JpaRepository<Categoria, Long>{
 
 	Categoria findByCategoria(String categoria);
+	Categoria findByIdProd(long id_prod);
 
 }

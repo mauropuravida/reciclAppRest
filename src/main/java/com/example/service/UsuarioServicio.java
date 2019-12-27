@@ -20,7 +20,7 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 
 	@Override
 	public Usuario findByIdUser(long id) {
-		return usuarioRepo.findByIdUser(id);
+		return usuarioRepo.findById(id);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 
 	@Override
 	public Usuario findByIdUserAndPassword(long idUser, String password) {
-		return usuarioRepo.findByIdUserAndPassword(idUser,password);
+		return usuarioRepo.findByIdAndPassword(idUser,password);
 	}
 
 	@Override
@@ -42,14 +42,10 @@ public class UsuarioServicio implements UsuarioServicioInterface{
 	public Usuario findByUsername(String username) {
 		return usuarioRepo.findByUsername(username);
 	}
-
-	@Override
-	public Usuario findByMail(String mail) {
-		return usuarioRepo.findByMail(mail);
-	}
 	
 	@Override
 	public void setPass(String pass, long user) {
 		usuarioRepo.setPass(user, pass);
 	}
+
 }

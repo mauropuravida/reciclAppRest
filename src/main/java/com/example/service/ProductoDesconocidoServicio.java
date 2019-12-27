@@ -16,4 +16,14 @@ public class ProductoDesconocidoServicio implements ProductoDesconocidoServicioI
 	public Producto_Desconocido save(Producto_Desconocido prodDesc) {
 		return prodDescRepo.save(prodDesc);
 	}
+
+	@Override
+	public Producto_Desconocido findByBarcode(String barcode) {
+		return prodDescRepo.findByBarcode(barcode);
+	}
+
+	@Override
+	public void delete(long id) {
+		prodDescRepo.deleteById(id);	
+	}
 }

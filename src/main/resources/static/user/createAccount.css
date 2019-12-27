@@ -36,12 +36,15 @@ h1.title{
     cursor: pointer;
 }
 
-div {
+.refactor{
+	text-align: center;
     position: absolute;
-    top: 40%;
+    width: 70vw;
+    left: 15vw;
+    /*top: 40%;
     left: 50%;
     transform: translate(-50%, -40%);
-    -ms-transform: translate(-50%, -40%); /* IE 9 */
+    -ms-transform: translate(-50%, -40%);
     -webkit-transform: translate(-50%, -40%); /* Chrome, Safari, Opera */	    
 }
 
@@ -67,11 +70,6 @@ table {
 
 }
 
-div.refactor{
-    text-align: center;
-    width: 70vw;
-}
-
 span.message{
 	text-align: center;
 	background-color: red;
@@ -90,4 +88,4 @@ th.row{
     table {
         width: 60vw;  
     }
-  }
+}

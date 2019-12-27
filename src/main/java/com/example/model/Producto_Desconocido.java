@@ -3,39 +3,58 @@ package com.example.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "producto_desconocido")
-@IdClass(ThreeKeys.class)
 public class Producto_Desconocido implements Serializable{
 	
 	  @Id
 	  //@GeneratedValue(strategy = GenerationType.AUTO)
 	  //VER PORQUE NO SE DEBERIA GENERAR AUTOMATICO, DEBERIA TOMAR LA FOREIGN KEY
-	  @Column(name = "id_user")
-	  private long id_user;
+	  @Column(name = "id")
+	  private long id;
 	 
-	  @Id
 	  @Column(name = "barcode")
 	  private String barcode;
 	  
-	  @Id
+	  @Column(name = "descripcion")
+	  private String descripcion;
+	  
+	  @Column(name = "texto_c")
+	  private String texto_c;
+	  
+	  @Column(name = "peso")
+	  private float peso;
+	  
+	  @Column(name = "volumen")
+	  private float volumen;
+	  
+	  @Column(name = "consenso")
+	  private int consenso;
+	  
 	  @Column(name = "categoria")
-	  private String categoria;
-
-	public long getId_user() {
-		return id_user;
+	  private int categoria;
+	  
+		
+	public Producto_Desconocido() {
+		barcode="";
+		descripcion="";
+		texto_c="";
+		peso=0;
+		volumen=0;
+		consenso=0;
+		categoria=0;
 	}
 
-	public void setId_user(long id_user) {
-		this.id_user = id_user;
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getBarcode() {
@@ -46,19 +65,58 @@ public class Producto_Desconocido implements Serializable{
 		this.barcode = barcode;
 	}
 
-	public String getCategoria() {
+	public int getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(String categoria) {
+	public void setCategoria(int categoria) {
 		this.categoria = categoria;
 	}
 
 	@Override
 	public String toString() {
-		return "Producto_Desconocido [id_user=" + id_user + ", barcode=" + barcode + ", categoria=" + categoria + "]";
-	} 
-	
+		return "Producto_Desconocido [id_user=" + id + ", barcode=" + barcode + ", categoria=" + categoria + "]";
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public String getTexto_c() {
+		return texto_c;
+	}
+
+	public void setTexto_c(String texto_c) {
+		this.texto_c = texto_c;
+	}
+
+	public float getPeso() {
+		return peso;
+	}
+
+	public void setPeso(float peso) {
+		this.peso = peso;
+	}
+
+	public float getVolumen() {
+		return volumen;
+	}
+
+	public void setVolumen(float volumen) {
+		this.volumen = volumen;
+	}
+
+	public int getConsenso() {
+		return consenso;
+	}
+
+	public void setConsenso(int consenso) {
+		this.consenso = consenso;
+	}	
 }
 
 

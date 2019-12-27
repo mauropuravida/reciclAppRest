@@ -16,6 +16,8 @@ public interface ChangePassRepository extends JpaRepository<ChangePass, Long>{
 
 	ChangePass findByUser(long id);
 	
+	ChangePass findByToken(String token);
+	
 	@Modifying
 	@Query(value = "DELETE FROM change_pass WHERE user = :user", nativeQuery=true)
 	void deleteAllByUser(@Param("user")long user);

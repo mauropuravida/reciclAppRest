@@ -310,17 +310,20 @@ const categorias = { //ESTE JSON SE OBTENDRIA DE UNA REQUEST AL SERVIDOR CADA VE
             "Monitor":{
                 "src":"./images/subcategorias/monitor.jpeg",
                 "info":" INFORMACION Monitor",
-                "volumen":1000
+                "volumen":1000,
+                "representante":0
             },
             "Teclado":{
                 "src":"./images/subcategorias/teclado.jpg",
                 "info":" INFORMACION teclado",
-                "volumen":500
+                "volumen":500,
+                "representante":0
             },
             "Mouse":{
                 "src":"./images/subcategorias/mouse.jpg",
                 "info":" INFORMACION mouse",
-                "volumen":250
+                "volumen":250,
+                "representante":0
             }
         },
         //"tipo":1
@@ -691,7 +694,12 @@ function ajustarElementos(){
 	var desplazamiento = w/2 - 115;
 	section.style.paddingLeft = desplazamiento+"px";
 	
-	generarGrafico();
+	if (!document.getElementById("myonoffswitch").checked){
+		console.log("Ajustando elemento de grafico historico");
+		generarGrafico();
+	}
+	else
+		buildChartHome();
 	
 	var h = window.innerHeight
 	|| document.documentElement.clientHeight
@@ -702,9 +710,14 @@ function ajustarElementos(){
 		extra += h/(w/24);
 	
 	var section2=document.getElementById("filtrar");
-	var desplazamiento2 = w/2 - 33;
+	var desplazamiento2 = w/2 - 100;
 	section2.style.marginLeft = desplazamiento2+"px";
 	section2.style.marginTop = extra+"px";
+	
+	var section4=document.getElementById("swichRec");
+	var desplazamiento4 = w/2 ;
+	section4.style.marginLeft = desplazamiento4+"px";
+	section4.style.marginTop = extra+"px";
 	
 	var section3=document.getElementById("primero");
 	var desplazamiento3 = w/2 - 112;
@@ -747,6 +760,50 @@ function decrementarInput(id,cant){//Decrementa el contador del form
         count.value--;
 }
 
+function buildChartHome(){
+	var http = new XMLHttpRequest();
+	var url = servicio+"reciclapp/cargarProductosUsuario";
+	http.open("GET", url, true);
+	
+	http.onreadystatechange = function() {
+	    if( http.readyState == 4 && http.status == 200) {
+	    	//parseo la respuesta
+	    	var arr = JSON.parse(this.responseText);
+	        
+	        var infoReciclado={};
+	        infoReciclado['Graficos'] = { //PESTAÑA GRAFICOS
+	            "graph":[
+	                ['Material', 'Cantidad'],
+	              ],
+	            "title":"Materiales reciclados en casa"
+	        }
+	    	for(i = 0; i < arr.length; i++){
+	    		var item = arr[i]["categoria"];
+	    		var cantidad = arr[i]["cantidad"];
+	    		infoReciclado.Graficos['graph'].push([item, cantidad]);
+	    	}
+	    	
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+                var jsonString=JSON.stringify(infoReciclado);
+                const obj= JSON.parse(jsonString);
+                //console.log(obj);
+                var data = google.visualization.arrayToDataTable(obj.Graficos.graph);
+                var options = {
+                    title: obj.Graficos.title,
+                    is3D: true,
+                    legend:{position: 'bottom', textStyle: {color: 'blue',alignment:'center'}},
+                    backgroundColor:'#EAECEA',                    
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('piechartHome'));
+                chart.draw(data, options);
+            }
+	    }
+	}
+	http.send();
+}
+
 function generarListado(){ //Se lee un json para obtener todos los datos a cargar en la pagina (Especificamente los reciclables que el usuario posee en su hogar)
 	var sectionVieja=document.getElementById("listado"); 
     if(sectionVieja!=null)
@@ -777,12 +834,12 @@ function generarListado(){ //Se lee un json para obtener todos los datos a carga
 	        for(const key in infoReciclado){
                     const element = infoReciclado[key];
                     crearElementoListado(element.categoria,element.cantidad);
-	        }
+	        }        
 	    }
 	}
 	http.send();
+	buildChartHome();
 
-	generarGrafico();
 	cargarCategorias();
 }
 
@@ -819,10 +876,24 @@ function cargarCategorias(){
 	http2.send();
 }
 
+function setView(){
+	if (!document.getElementById("myonoffswitch").checked){
+		document.getElementById("piechart").style.display = "block";
+		document.getElementById("piechartHome").style.display = "none";
+		generarGrafico();
+	}else{
+		document.getElementById("piechart").style.display = "none";
+		document.getElementById("piechartHome").style.display = "block";
+	}
+	
+}
+
 function generarGrafico(){	
 	document.getElementById("filtrar").style.display = "block";
 	document.getElementById("primero").style.display = "none";
+	document.getElementById("swichRec").style.display = "block";
 	document.getElementById("piechart").style.display = "block";
+	document.getElementById("myonoffswitch").checked = false;
 	//consultar historico de usuario
 	var http2 = new XMLHttpRequest();
 	var url = servicio+"reciclapp/recuperarDatos";
@@ -857,6 +928,7 @@ function generarGrafico(){
 	    		var cantidad = arr[i]["cantidad"];
 	    		infoReciclado.Graficos['graph'].push([item, cantidad]);
 	    	}
+
 	    	/*infoReciclado = {
 		        "Graficos" : { //PESTAÑA GRAFICOS
 		            "graph":[
@@ -907,6 +979,8 @@ function mostrarMenuFiltro(){
 	document.getElementById("filtrar").style.display = "none";
 	document.getElementById("primero").style.display = "block";
 	document.getElementById("piechart").style.display = "none";
+	document.getElementById("piechartHome").style.display = "none";
+	document.getElementById("swichRec").style.display = "none";
 }
 
 function getDate(){

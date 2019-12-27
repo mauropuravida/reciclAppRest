@@ -23,4 +23,9 @@ public class CategoriaServicio implements CategoriaServicioInterface{
 	public List<Categoria> findAll() {
 		return categoriaRepo.findAll();
 	}
+
+	@Override
+	public String findByIdProd(long categoria) {
+		return categoriaRepo.findByIdProd(categoria).getCategoria();
+	}
 }

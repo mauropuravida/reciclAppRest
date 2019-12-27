@@ -31,7 +31,7 @@ self.addEventListener('install', (evt) => {
   // CODELAB: Precache static resources here.
   evt.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[ServiceWorker] Pre-caching offline page');
+      //console.log('[ServiceWorker] Pre-caching offline page');
       return cache.addAll(FILES_TO_CACHE);
     })
 );
@@ -55,7 +55,6 @@ self.addEventListener('activate', (evt) => {
 });
 
 self.addEventListener('fetch', (evt) => {
-  console.log('[ServiceWorker] Fetch', evt.request.url);
   // CODELAB: Add fetch event handler here.
   if (evt.request.mode !== 'navigate') {
   // Not a page navigation, bail.

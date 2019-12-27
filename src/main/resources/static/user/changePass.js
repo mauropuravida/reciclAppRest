@@ -42,7 +42,7 @@ function changePass(){
 	    else{
 	    	document.getElementById("message").style.visibility = "visible";
 	    	document.getElementById("message").style.backgroundColor = "red";
-	    	document.getElementById("message").innerHTML="Los datos fueron erroneos";
+	    	document.getElementById("message").innerHTML="Datos erroneos";
 	    	setTimeout(function(){document.getElementById("message").style.visibility = "hidden";}, 4*1000);
 	    }
 	}

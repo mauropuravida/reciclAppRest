@@ -16,8 +16,6 @@ import javax.persistence.Table;
 public class AReciclar implements Serializable{
 	
 	  @Id
-	  //@GeneratedValue(strategy = GenerationType.AUTO)
-	  //VER PORQUE NO SE DEBERIA GENERAR AUTOMATICO, DEBERIA TOMAR LA FOREIGN KEY
 	  @Column(name = "id_user")
 	  private long idUser;
 	  @Id

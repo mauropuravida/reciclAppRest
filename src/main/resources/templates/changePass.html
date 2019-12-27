@@ -5,7 +5,15 @@
 <link rel="stylesheet" href="../reciclapp/user/changePass.css" >
 <script src="../reciclapp/user/changePass.js" defer></script>
 <script src="../reciclapp/conexion.js" defer></script>
-<title>Login</title>
+<title>Cambiar Contraseña</title>
+  <!-- Progressive Web App -->
+  <meta name="theme-color" content="#f5f8fa">
+  <link rel="manifest" href="../reciclapp/manifest.json">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" sizes="192x192" href="../reciclapp/images/reciclapp.ico">
+  <link rel="icon" sizes="512x512" href="../reciclapp/images/reciclapp.ico">
 </head>
 
   <body>
@@ -22,37 +30,37 @@
               <tr> 
                 <th scope="row" class="row"><h2>Usuario</h2></th> 
                 <td><span class="cnt"> 
-                  <input name="usuario" id="user" type="text" class="Input" value="" size="20"  placeholder="Usuario" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
+                  <input id="user" name="usuario" type="email" value="" placeholder="Email@Domain.com" size="20" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}" title="Ingrese su email" required/> 
                 </span></td> 
                 <th><input value="Solicitar código" id="boton1" target="_parent" onclick="Change()" type="button" class="boton"/></th>
               </tr>
 				<tr>
 				  <th scope="row" class="row"><h2>Código</h2></th> 
 				  <td><span class="cnt"> 
-				    <input name="usuario" type="text"  id="code" class="Input" value="" size="20"  placeholder="Usuario" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
+				    <input name="code" type="text"  id="code" class="Input" value="" size="20"  placeholder="Codigo" pattern="[A-Za-z0-9]{40}" title="Codigo de 40 caracteres alfanumericos" required/> 
 				  </span></td>
 				</tr> 
 				<tr> 
 				  <th scope="row" class="row"><h2>Nueva Contraseña</h2></th> 
 				  <td><span class="cnt"> 
-				    <input name="pass" type="text"  id="pass" class="Input" value="" size="20"  placeholder="Contraseña" pattern="[A-Za-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
+				    <input name="pass" type="password"  id="pass" class="Input" value="" size="20"  placeholder="Nueva Contraseña" pattern="[A-ZñÑáéíóúÁÉÍÓÚa-z0-9]{5,20}" title="Minimo 5 caracteres alfanumericos" required/> 
 				  </span></td>
 				</tr>
+			</table>
+			<table style="width:754px">
 				<tr>
-					<th></th>
-					<th >
-						<input value="Cambiar Contraseña" id="boton2" target="_parent" onclick="" type="submit" class="boton"/>
-					</th>
+					<th style="width:20%"></th>
+					<th style="width:80%"></th>
 				</tr>
+				<tr>
+					<td ></td>
+					<td align="left">
+						<span><input value="Confirmar" target="_parent" id="boton2" onclick="" type="submit" class="boton"/></span>
+						<span><input value="Volver" target="_parent" onclick="Back()" type="button" class="boton"/></span>
+					</td>
+				</tr>
+            </table>
 
-	              <tr height="60">
-	                <th scope="row">
-	                </th>
-	                <th scope="row">
-	                  <input value="Volver" target="_parent" onclick="Back()" type="button" class="boton"/>
-                </th> 
-              </tr> 
-            </table> 
         </form>
     </div>
   </body>

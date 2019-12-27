@@ -11,4 +11,6 @@ public interface CategoriaServicioInterface {
 
 	public List<Categoria> findAll();
 
+	public String findByIdProd(long categoria);
+
 }
